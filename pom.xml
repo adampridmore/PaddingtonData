@@ -4,12 +4,6 @@
     <groupId>PaddingtonData</groupId>
     <artifactId>PaddingtonData</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
-    <name>Simple CXF JAX-RS webapp service using spring configuration</name>
-    <description>Simple CXF JAX-RS webapp service using spring configuration</description>
-    <properties>
-        <jackson.version>1.8.6</jackson.version>
-    </properties>
 
     <dependencies>
         <dependency>
