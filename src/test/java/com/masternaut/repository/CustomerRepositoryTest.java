@@ -1,6 +1,7 @@
 package com.masternaut.repository;
 
 import com.masternaut.domain.Customer;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring/UnitTest-context.xml")
@@ -16,10 +19,16 @@ public class CustomerRepositoryTest {
     @Autowired
     private RepositoryFactory repositoryFactory;
 
+    private CustomerRepository customerRepository;
+
+    @Before
+    public void before() {
+        customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
+        customerRepository.deleteAll();
+    }
+
     @Test
     public void saveAndLoad() {
-        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
 
@@ -33,15 +42,56 @@ public class CustomerRepositoryTest {
 
     @Test
     public void countRecords() {
-        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-
-        customerRepository.deleteAll();
-
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
 
         customerRepository.save(customer);
 
         assertEquals(1, customerRepository.count());
+    }
+
+    @Test
+    public void findByName() {
+        Customer customer1 = new Customer();
+        customer1.setName("MyCustomer1");
+
+        Customer customer2 = new Customer();
+        customer2.setName("MyCustomer2");
+
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+
+        Customer foundCustomer = customerRepository.tryFindByName("MyCustomer1");
+
+        assertEquals(foundCustomer.getId(), customer1.getId());
+        assertEquals(foundCustomer.getName(), customer1.getName());
+    }
+
+    @Test
+    public void findByNameWhenNoMatch() {
+        Customer foundCustomer = customerRepository.tryFindByName("NotACustomer");
+        assertNull(foundCustomer);
+    }
+
+    @Test
+    public void findByNameWhenTooManyMatch() {
+
+        String customerName = "MySameCustomerName";
+
+        Customer customer1 = new Customer();
+        customer1.setName(customerName);
+
+        Customer customer2 = new Customer();
+        customer2.setName(customerName);
+
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+
+        try {
+            customerRepository.tryFindByName(customerName);
+            fail("exception not thrown");
+        } catch (Throwable t) {
+            assertEquals(String.format("Too many customers found with name: '%s'.", customerName), t.getMessage());
+        }
     }
 }
