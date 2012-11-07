@@ -1,4 +1,4 @@
-package com.masternaut;
+package com.masternaut.factory;
 
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;

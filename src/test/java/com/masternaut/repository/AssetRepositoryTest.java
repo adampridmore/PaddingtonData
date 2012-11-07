@@ -1,6 +1,6 @@
 package com.masternaut.repository;
 
-import com.masternaut.RepositoryFactory;
+import com.masternaut.factory.RepositoryFactory;
 import com.masternaut.domain.Asset;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;

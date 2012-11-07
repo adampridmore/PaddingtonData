@@ -25,9 +25,9 @@
         <!--</property>-->
     <!--</bean>-->
 
-    <!--<bean id="repositoryFactory"  class="com.masternaut.RepositoryFactory"/>-->
+    <!--<bean id="repositoryFactory"  class="com.masternaut.factory.RepositoryFactory"/>-->
 
-    <context:component-scan base-package="com.masternaut.repository" />
+    <context:component-scan base-package="com.masternaut.factory" />
 
     <mongo:mongo host="localhost" port="27017"/>
 
