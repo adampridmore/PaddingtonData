@@ -57,7 +57,7 @@ public class CustomerRepositoryTest {
             customerRepository.findById("NotAValidCustomerId");
             fail("Exception not thrown");
         } catch (PaddingtonException pe) {
-            assertEquals("Invalid customerId 'NotAValidCustomerId'", pe.getMessage());
+            assertEquals("Cannot find Customer with id of 'NotAValidCustomerId'", pe.getMessage());
         }
     }
 

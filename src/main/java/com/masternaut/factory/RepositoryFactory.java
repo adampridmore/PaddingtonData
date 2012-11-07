@@ -5,6 +5,7 @@ import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.AssetRepository;
 import com.masternaut.repository.CustomerRepository;
+import com.masternaut.repository.SystemSettingsRepository;
 import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,6 +30,10 @@ public class RepositoryFactory {
 
         if (clazz.equals(customerRepositoryClass)) {
             return (T)customerRepository;
+        }
+
+        if (clazz.equals(SystemSettingsRepository.class)){
+            return (T)new SystemSettingsRepository(systemMongoTemplate);
         }
 
         if (clazz.equals(AssetRepository.class)){
