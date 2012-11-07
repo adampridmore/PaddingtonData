@@ -1,7 +1,6 @@
 package com.masternaut.repository;
 
 import com.masternaut.domain.Asset;
-import com.masternaut.domain.Customer;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -16,7 +15,7 @@ public class AssetRepository {
     public void deleteAll(String customerId) {
         MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
 
-        mongoTemplate.remove(new Query(), Customer.class);
+        mongoTemplate.remove(new Query(), Asset.class);
     }
 
     public void save(Asset asset) {
