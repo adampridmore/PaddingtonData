@@ -4,21 +4,14 @@ import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/spring/UnitTest-context.xml")
-public class CustomerRepositoryTest {
-
-    @Autowired
-    private RepositoryFactory repositoryFactory;
+public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
 
     private CustomerRepository customerRepository;
 

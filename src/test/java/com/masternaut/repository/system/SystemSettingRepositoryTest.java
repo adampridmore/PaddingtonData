@@ -1,22 +1,14 @@
 package com.masternaut.repository.system;
 
 import com.masternaut.domain.SystemSettings;
-import com.masternaut.factory.RepositoryFactory;
-import com.masternaut.repository.system.SystemSettingsRepository;
+import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.mongodb.util.MyAsserts.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/spring/UnitTest-context.xml")
-public class SystemSettingRepositoryTest {
-    @Autowired
-    private RepositoryFactory repositoryFactory;
+
+public class SystemSettingRepositoryTest extends BaseSystemRepositoryTest {
 
     private SystemSettingsRepository systemSettingsRepository;
 
