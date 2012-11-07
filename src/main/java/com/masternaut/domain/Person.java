@@ -2,7 +2,7 @@ package com.masternaut.domain;
 
 import com.masternaut.CustomerIdentifiable;
 
-public class Asset extends CustomerIdentifiable{
+public class Person extends CustomerIdentifiable{
     private String name;
 
     public String getName() {

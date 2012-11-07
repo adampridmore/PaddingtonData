@@ -1,37 +1,11 @@
 package com.masternaut.repository;
 
-import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.BaseCustomerRepository;
 import com.masternaut.domain.Asset;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
+import com.masternaut.factory.RepositoryFactory;
 
-public class AssetRepository {
-
-    private RepositoryFactory repositoryFactory;
-
+public class AssetRepository extends BaseCustomerRepository<Asset> {
     public AssetRepository(RepositoryFactory repositoryFactory) {
-        this.repositoryFactory = repositoryFactory;
-    }
-
-    public void deleteAll(String customerId) {
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
-
-        mongoTemplate.remove(new Query(), Asset.class);
-    }
-
-    public void save(Asset asset) {
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(asset.getCustomerId());
-
-        mongoTemplate.save(asset);
-    }
-
-    public Asset findById(String id, String customerId) {
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
-
-        Asset asset = mongoTemplate.findById(id, Asset.class);
-
-        asset.setCustomerId(customerId);
-
-        return asset;
+        super(repositoryFactory, Asset.class);
     }
 }

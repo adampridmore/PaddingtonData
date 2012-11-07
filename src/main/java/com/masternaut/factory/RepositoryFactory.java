@@ -5,6 +5,7 @@ import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.AssetRepository;
 import com.masternaut.repository.CustomerRepository;
+import com.masternaut.repository.PersonRepository;
 import com.masternaut.repository.SystemSettingsRepository;
 import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,17 @@ public class RepositoryFactory {
             return (T)customerRepository;
         }
 
+        // TODO - Load either system or customer specific repository here
         if (clazz.equals(SystemSettingsRepository.class)){
             return (T)new SystemSettingsRepository(systemMongoTemplate);
         }
 
+        // TODO - Customer specific repositories
         if (clazz.equals(AssetRepository.class)){
            return (T)new AssetRepository(this);
+        }
+        if (clazz.equals(PersonRepository.class)){
+            return (T)new PersonRepository(this);
         }
 
         throw new PaddingtonException("Unknown repository type: " + clazz.getSimpleName());

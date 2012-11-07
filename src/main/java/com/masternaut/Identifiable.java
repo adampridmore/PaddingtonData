@@ -1,6 +1,6 @@
 package com.masternaut;
 
-public class Identifiable {
+public abstract class Identifiable {
     private String id;
 
     public String getId() {

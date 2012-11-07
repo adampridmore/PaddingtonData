@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static com.mongodb.util.MyAsserts.assertEquals;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring/UnitTest-context.xml")
 public class SystemSettingRepositoryTest {
@@ -30,6 +32,8 @@ public class SystemSettingRepositoryTest {
 
         systemSettingsRepository.save(systemSettings);
 
-        systemSettingsRepository.findById(systemSettings.getId());
+        SystemSettings loadedSystemSettings = systemSettingsRepository.findById(systemSettings.getId());
+        assertEquals(systemSettings.getId(), loadedSystemSettings.getId());
+        assertEquals("MySystemName", loadedSystemSettings.getSystemName());
     }
 }
