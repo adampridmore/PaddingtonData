@@ -1,5 +1,6 @@
 package com.masternaut.repository;
 
+import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import org.junit.Before;
@@ -50,6 +51,16 @@ public class CustomerRepositoryTest {
     }
 
     @Test
+    public void loadByInvalidId() {
+        try {
+            customerRepository.findById("NotAValidCustomerId");
+            fail("Exception not thrown");
+        } catch (PaddingtonException pe) {
+            assertEquals("Invalid customerId 'NotAValidCustomerId'", pe.getMessage());
+        }
+    }
+
+    @Test
     public void countRecords() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
@@ -60,7 +71,7 @@ public class CustomerRepositoryTest {
     }
 
     @Test
-    public void deleteAll(){
+    public void deleteAll() {
         Customer customer = new Customer();
         customerRepository.save(customer);
 
@@ -68,7 +79,7 @@ public class CustomerRepositoryTest {
 
         long count = customerRepository.count();
 
-        assertEquals(0,count);
+        assertEquals(0, count);
     }
 
     @Test

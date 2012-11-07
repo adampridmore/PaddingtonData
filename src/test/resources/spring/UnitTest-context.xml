@@ -34,7 +34,7 @@
     <!-- Offers convenience methods and automatic mapping between MongoDB JSON documents and your domain classes. -->
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="mongo"/>
-        <constructor-arg value="mydb"/>
+        <constructor-arg value="UnitTest_System"/>
     </bean>
 
 </beans>

@@ -1,5 +1,6 @@
 package com.masternaut.repository;
 
+import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -18,8 +19,14 @@ public class CustomerRepository {
         mongoTemplate.save(customer);
     }
 
-    public Customer findById(String id) {
-        return mongoTemplate.findById(id, Customer.class);
+    public Customer findById(String customerId) {
+        Customer customer = mongoTemplate.findById(customerId, Customer.class);
+        if (customer == null){
+            throw new PaddingtonException(String.format("Invalid customerId '%s'", customerId));
+        }
+
+        return customer;
+
     }
 
     public long count() {

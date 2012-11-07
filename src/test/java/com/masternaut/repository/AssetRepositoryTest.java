@@ -1,6 +1,8 @@
 package com.masternaut.repository;
 
 import com.masternaut.domain.Asset;
+import com.masternaut.domain.Customer;
+import com.masternaut.domain.MongoConnectionDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,16 @@ public class AssetRepositoryTest {
     @Before
     public void before() {
         assetRepository = repositoryFactory.createRepository(AssetRepository.class);
+        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
+
+        customerRepository.deleteAll();
+
+        Customer customer = new Customer();
+        customer.setId("MyCustomerId");
+        customer.setName("MyCustomerName");
+        MongoConnectionDetails connectionDetails= new MongoConnectionDetails("UnitTest_MyCustomerName_Domain");
+        customer.setDomainMongoConnectionDetails(connectionDetails);
+        customerRepository.save(customer);
 
         assetRepository.deleteAll("MyCustomerId");
     }

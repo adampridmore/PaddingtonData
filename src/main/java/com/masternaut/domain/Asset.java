@@ -2,6 +2,8 @@ package com.masternaut.domain;
 
 public class Asset {
     private String id;
+
+    // TODO - Don't persist in mongoDb
     private String customerId;
 
     private String name;
