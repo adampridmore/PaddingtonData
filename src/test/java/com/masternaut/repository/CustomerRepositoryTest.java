@@ -60,6 +60,18 @@ public class CustomerRepositoryTest {
     }
 
     @Test
+    public void deleteAll(){
+        Customer customer = new Customer();
+        customerRepository.save(customer);
+
+        customerRepository.deleteAll();
+
+        long count = customerRepository.count();
+
+        assertEquals(0,count);
+    }
+
+    @Test
     public void findByName() {
         Customer customer1 = new Customer();
         customer1.setName("MyCustomer1");
