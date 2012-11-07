@@ -1,5 +1,6 @@
 package com.masternaut.repository.system;
 
+import com.masternaut.PaddingtonDatabase;
 import com.masternaut.domain.SystemSettings;
 import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import static com.mongodb.util.MyAsserts.assertEquals;
 
 
+@PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
 public class SystemSettingRepositoryTest extends BaseSystemRepositoryTest {
 
     private SystemSettingsRepository systemSettingsRepository;

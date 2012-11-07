@@ -1,5 +1,6 @@
 package com.masternaut.repository.system;
 
+import com.masternaut.PaddingtonDatabase;
 import com.masternaut.repository.BaseSystemRepository;
 import com.masternaut.domain.Customer;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 
+@PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
 public class CustomerRepository extends BaseSystemRepository<Customer>{
     public CustomerRepository(MongoTemplate mongoTemplate) {
         super(mongoTemplate, Customer.class);

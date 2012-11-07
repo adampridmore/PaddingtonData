@@ -1,17 +1,16 @@
 package com.masternaut.factory;
 
+import com.masternaut.PaddingtonDatabase;
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
-import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.system.CustomerRepository;
-import com.masternaut.repository.customer.PersonRepository;
-import com.masternaut.repository.system.SystemSettingsRepository;
 import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 
 @Component
@@ -26,27 +25,48 @@ public class RepositoryFactory {
     }
 
     public <T> T createRepository(Class<T> clazz) {
-
-        Class<CustomerRepository> customerRepositoryClass = CustomerRepository.class;
-
-        if (clazz.equals(customerRepositoryClass)) {
-            return (T)customerRepository;
+        if (clazz.equals(CustomerRepository.class)) {
+            return (T) customerRepository;
         }
 
-        // TODO - Load either system or customer specific repository here
-        if (clazz.equals(SystemSettingsRepository.class)){
-            return (T)new SystemSettingsRepository(systemMongoTemplate);
+        PaddingtonDatabase databaseAnnotation = getPaddingtonDatabaseAnnotation(clazz);
+
+        if (databaseAnnotation.type() == PaddingtonDatabase.DatabaseType.System) {
+            return createSystemRepository(clazz);
         }
 
-        // TODO - Customer specific repositories
-        if (clazz.equals(AssetRepository.class)){
-           return (T)new AssetRepository(this);
-        }
-        if (clazz.equals(PersonRepository.class)){
-            return (T)new PersonRepository(this);
+        if (databaseAnnotation.type() == PaddingtonDatabase.DatabaseType.CustomerDomain){
+            return createCustomerDomainRepository(clazz);
         }
 
         throw new PaddingtonException("Unknown repository type: " + clazz.getSimpleName());
+    }
+
+    private <T> T createCustomerDomainRepository(Class<T> clazz) {
+        try {
+            Constructor<T> constructor = clazz.getConstructor(RepositoryFactory.class);
+            return constructor.newInstance(this);
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
+    private <T> T createSystemRepository(Class<T> clazz) {
+        try {
+            Constructor<T> constructor = clazz.getConstructor(MongoTemplate.class);
+            return constructor.newInstance(systemMongoTemplate);
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
+    private <T> PaddingtonDatabase getPaddingtonDatabaseAnnotation(Class<T> clazz) {
+        PaddingtonDatabase annotation = clazz.getAnnotation(PaddingtonDatabase.class);
+        if (annotation == null) {
+            throw new PaddingtonException(String.format("%s is missing %s annotation", clazz, PaddingtonDatabase.class.getSimpleName()));
+        }
+
+        return annotation;
     }
 
     public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
@@ -63,6 +83,6 @@ public class RepositoryFactory {
             throw new PaddingtonException(e);
         }
 
-        return new MongoTemplate(mongo,  domainMongoConnectionDetails.getDatabaseName());
+        return new MongoTemplate(mongo, domainMongoConnectionDetails.getDatabaseName());
     }
 }
