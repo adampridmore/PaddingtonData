@@ -1,5 +1,6 @@
 package com.masternaut.repository;
 
+import com.masternaut.RepositoryFactory;
 import com.masternaut.domain.Asset;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;

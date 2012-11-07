@@ -1,8 +1,10 @@
-package com.masternaut.repository;
+package com.masternaut;
 
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
+import com.masternaut.repository.AssetRepository;
+import com.masternaut.repository.CustomerRepository;
 import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;

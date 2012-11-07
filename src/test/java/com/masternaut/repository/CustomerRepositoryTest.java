@@ -1,6 +1,7 @@
 package com.masternaut.repository;
 
 import com.masternaut.PaddingtonException;
+import com.masternaut.RepositoryFactory;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import org.junit.Before;
