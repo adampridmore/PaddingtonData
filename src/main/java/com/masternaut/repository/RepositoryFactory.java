@@ -1,27 +1,36 @@
 package com.masternaut.repository;
 
+import com.masternaut.PaddingtonException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Constructor;
-
 @Component
 public class RepositoryFactory {
-    private MongoTemplate mongoTemplate;
+    private MongoTemplate systemMongoTemplate;
 
     @Autowired
-    public RepositoryFactory(MongoTemplate mongoTemplate) {
-
-        this.mongoTemplate = mongoTemplate;
+    public RepositoryFactory(MongoTemplate systemMongoTemplate) {
+        this.systemMongoTemplate = systemMongoTemplate;
     }
 
     public <T> T createRepository(Class<T> clazz) {
-        try {
-            Constructor<T> constructor = clazz.getConstructor(MongoTemplate.class);
-            return constructor.newInstance(mongoTemplate);
-        } catch(Throwable t) {
-            throw new RuntimeException(t);
+
+        Class<CustomerRepository> customerRepositoryClass = CustomerRepository.class;
+
+        if (clazz.equals(customerRepositoryClass)) {
+            return (T)new CustomerRepository(systemMongoTemplate);
         }
+
+        if (clazz.equals(AssetRepository.class)){
+           return (T)new AssetRepository(this);
+        }
+
+        throw new PaddingtonException("Unknown repository type: " + clazz.getSimpleName());
+    }
+
+    public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
+        // TODO
+        return systemMongoTemplate;
     }
 }

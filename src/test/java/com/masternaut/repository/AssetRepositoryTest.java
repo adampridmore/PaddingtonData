@@ -21,8 +21,10 @@ public class AssetRepositoryTest {
     @Before
     public void before() {
         assetRepository = repositoryFactory.createRepository(AssetRepository.class);
-        assetRepository.deleteAll();
+
+        assetRepository.deleteAll("MyCustomerId");
     }
+
     @Test
     public void saveAndLoad(){
         Asset asset = new Asset();
@@ -31,7 +33,7 @@ public class AssetRepositoryTest {
 
         assetRepository.save(asset);
 
-        Asset loadedAsset = assetRepository.findById(asset.getId());
+        Asset loadedAsset = assetRepository.findById(asset.getId(), "MyCustomerId");
 
         assertEquals(asset.getId(), loadedAsset.getId());
         assertEquals("MyAssetName", loadedAsset.getName());
