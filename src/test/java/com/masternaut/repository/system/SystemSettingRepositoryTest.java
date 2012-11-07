@@ -1,7 +1,8 @@
-package com.masternaut.repository;
+package com.masternaut.repository.system;
 
 import com.masternaut.domain.SystemSettings;
 import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.repository.system.SystemSettingsRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

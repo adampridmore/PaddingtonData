@@ -1,6 +1,6 @@
-package com.masternaut.repository;
+package com.masternaut.repository.customer;
 
-import com.masternaut.BaseCustomerRepository;
+import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.domain.Asset;
 import com.masternaut.factory.RepositoryFactory;
 

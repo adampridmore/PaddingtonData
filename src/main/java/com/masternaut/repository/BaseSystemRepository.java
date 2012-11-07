@@ -1,5 +1,7 @@
-package com.masternaut;
+package com.masternaut.repository;
 
+import com.masternaut.Identifiable;
+import com.masternaut.PaddingtonException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 

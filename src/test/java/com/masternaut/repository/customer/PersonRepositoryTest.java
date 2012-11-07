@@ -1,9 +1,11 @@
-package com.masternaut.repository;
+package com.masternaut.repository.customer;
 
-import com.masternaut.factory.RepositoryFactory;
-import com.masternaut.domain.Asset;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
+import com.masternaut.domain.Person;
+import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.repository.customer.PersonRepository;
+import com.masternaut.repository.system.CustomerRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,21 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertEquals;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring/UnitTest-context.xml")
-public class AssetRepositoryTest {
+public class PersonRepositoryTest {
+
     @Autowired
     private RepositoryFactory repositoryFactory;
 
-    private AssetRepository assetRepository;
+    private PersonRepository personRepository;
 
     @Before
     public void before() {
-        assetRepository = repositoryFactory.createRepository(AssetRepository.class);
         CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-
         customerRepository.deleteAll();
 
         Customer customer = new Customer();
@@ -35,21 +34,18 @@ public class AssetRepositoryTest {
         customer.setDomainMongoConnectionDetails(connectionDetails);
         customerRepository.save(customer);
 
-        assetRepository.deleteAll("MyCustomerId");
+        personRepository = repositoryFactory.createRepository(PersonRepository.class);
+        personRepository.deleteAll("MyCustomerId");
     }
 
     @Test
-    public void saveAndLoad(){
-        Asset asset = new Asset();
-        asset.setCustomerId("MyCustomerId");
-        asset.setName("MyAssetName");
+    public void loadAndSave(){
+        Person person = new Person();
+        person.setCustomerId("MyCustomerId");
+        person.setName("MyPersonName");
 
-        assetRepository.save(asset);
+        personRepository.save(person);
 
-        Asset loadedAsset = assetRepository.findById(asset.getId(), "MyCustomerId");
-
-        assertEquals(asset.getId(), loadedAsset.getId());
-        assertEquals("MyAssetName", loadedAsset.getName());
-        assertEquals("MyCustomerId", loadedAsset.getCustomerId());
+        personRepository.findById(person.getId(), "MyCustomerId");
     }
 }
