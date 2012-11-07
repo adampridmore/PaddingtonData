@@ -1,9 +1,11 @@
 package com.masternaut.domain;
 
+import org.springframework.data.annotation.Transient;
+
 public class Asset {
     private String id;
 
-    // TODO - Don't persist in mongoDb
+    @Transient
     private String customerId;
 
     private String name;

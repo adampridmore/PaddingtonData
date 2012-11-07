@@ -28,6 +28,10 @@ public class AssetRepository {
     public Asset findById(String id, String customerId) {
         MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
 
-        return mongoTemplate.findById(id, Asset.class);
+        Asset asset = mongoTemplate.findById(id, Asset.class);
+
+        asset.setCustomerId(customerId);
+
+        return asset;
     }
 }
