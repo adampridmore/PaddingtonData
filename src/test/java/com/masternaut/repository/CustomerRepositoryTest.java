@@ -1,6 +1,7 @@
 package com.masternaut.repository;
 
 import com.masternaut.domain.Customer;
+import com.masternaut.domain.MongoConnectionDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,11 @@ public class CustomerRepositoryTest {
     public void saveAndLoad() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
+        MongoConnectionDetails connectionDetails = new MongoConnectionDetails();
+        connectionDetails.setDatabaseName("MyDatabaseName");
+        connectionDetails.setHostname("MyHostname");
+        connectionDetails.setPort(123);
+        customer.setDomainMongoConnectionDetails(connectionDetails);
 
         customerRepository.save(customer);
 
@@ -38,6 +44,9 @@ public class CustomerRepositoryTest {
 
         assertEquals(customer.getId(), loadedCustomer.getId());
         assertEquals("MyCustomerName", loadedCustomer.getName());
+        assertEquals("MyDatabaseName", loadedCustomer.getDomainMongoConnectionDetails().getDatabaseName());
+        assertEquals("MyHostname", loadedCustomer.getDomainMongoConnectionDetails().getHostname());
+        assertEquals(123, loadedCustomer.getDomainMongoConnectionDetails().getPort());
     }
 
     @Test
