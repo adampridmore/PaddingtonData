@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import static com.mongodb.util.MyAsserts.assertEquals;
 
-
 @PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
 public class SystemSettingRepositoryTest extends BaseSystemRepositoryTest {
 

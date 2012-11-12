@@ -7,6 +7,7 @@ import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.system.CustomerRepository;
 import com.mongodb.Mongo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,18 +16,15 @@ import java.net.UnknownHostException;
 
 @Component
 public class RepositoryFactory {
-    private MongoTemplate systemMongoTemplate;
-    private CustomerRepository customerRepository;
 
     @Autowired
-    public RepositoryFactory(MongoTemplate systemMongoTemplate) {
-        this.systemMongoTemplate = systemMongoTemplate;
-        this.customerRepository = new CustomerRepository(systemMongoTemplate);
-    }
+    private MongoTemplate systemMongoTemplate;
+
+    private CustomerRepository customerRepository;
 
     public <T> T createRepository(Class<T> clazz) {
         if (clazz.equals(CustomerRepository.class)) {
-            return (T) customerRepository;
+            return (T) getCustomerRepository();
         }
 
         PaddingtonDatabase databaseAnnotation = getPaddingtonDatabaseAnnotation(clazz);
@@ -40,6 +38,14 @@ public class RepositoryFactory {
         }
 
         throw new PaddingtonException("Unknown repository type: " + clazz.getSimpleName());
+    }
+
+    private CustomerRepository getCustomerRepository() {
+        if (customerRepository == null){
+            this.customerRepository = new CustomerRepository(systemMongoTemplate);
+        }
+
+        return customerRepository;
     }
 
     private <T> T createCustomerDomainRepository(Class<T> clazz) {
@@ -69,6 +75,7 @@ public class RepositoryFactory {
         return annotation;
     }
 
+    @Cacheable(value="repositoryFactory")
     public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 

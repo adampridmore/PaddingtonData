@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Configures the Camel Context -->
-
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:repository="http://www.springframework.org/schema/data/repository"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
 
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd
 
+       http://www.springframework.org/schema/data/repository
+       http://www.springframework.org/schema/data/repository/spring-repository.xsd
+
+       http://www.springframework.org/schema/cache
+       http://www.springframework.org/schema/cache/spring-cache.xsd
+
        http://www.springframework.org/schema/data/mongo
        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd"
         >
 
-    <!--<context:component-scan base-package="com.masternaut.platform.dataaccess.repositories" />-->
-
-    <!--<bean id="propertyPlaceHolder" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
-        <!--<property name="locations">-->
-            <!--<list>-->
-                <!--<value>classpath:MultiCustomerRepository.properties</value>-->
-            <!--</list>-->
-        <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="repositoryFactory"  class="com.masternaut.factory.RepositoryFactory"/>-->
-
-    <context:component-scan base-package="com.masternaut.factory" />
+    <!-- Mongo -->
+    <!--<context:component-scan base-package="com.masternaut.factory" />-->
 
     <mongo:mongo host="localhost" port="27017"/>
 
-    <!-- Offers convenience methods and automatic mapping between MongoDB JSON documents and your domain classes. -->
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+    <bean id="systemMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="mongo"/>
         <constructor-arg value="UnitTest_System"/>
+    </bean>
+
+    <bean id="repositoryFactory" class="com.masternaut.factory.RepositoryFactory"/>
+
+    <!-- Spring Caching -->
+    <cache:annotation-driven />
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache" />
+    </bean>
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/spring/ehcache.xml" />
     </bean>
 
 </beans>

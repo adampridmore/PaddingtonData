@@ -11,6 +11,7 @@ import java.util.List;
 
 @PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
 public class CustomerRepository extends BaseSystemRepository<Customer>{
+
     public CustomerRepository(MongoTemplate mongoTemplate) {
         super(mongoTemplate, Customer.class);
     }
