@@ -2,14 +2,24 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<strong>Hello World</strong>
+<strong>Customers</strong>
 
-<ul>
-
-</ul>
-
-<c:forEach var="customer" items="${customers}">
-    <li>${customer.name}</li>
-</c:forEach>
-
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <c:forEach var="customer" items="${customers}">
+            <tr>
+                <td>${customer.name}</td>
+                <td><a href="#view/${customer.id}">view</a></td>
+                <td><a href="#edit/${customer.id}">edit</a></td>
+                <td><a href="#delete/${customer.id}">delete</a></td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
 
