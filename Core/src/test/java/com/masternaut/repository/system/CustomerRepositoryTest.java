@@ -3,11 +3,9 @@ package com.masternaut.repository.system;
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
-import com.masternaut.factory.RepositoryFactory;
 import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
 
