@@ -7,6 +7,8 @@ import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
@@ -87,6 +89,24 @@ public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
 
         assertEquals(foundCustomer.getId(), customer1.getId());
         assertEquals(foundCustomer.getName(), customer1.getName());
+    }
+
+    @Test
+    public void findAll(){
+        Customer customer1 = new Customer();
+        customer1.setName("MyCustomer1");
+
+        Customer customer2 = new Customer();
+        customer2.setName("MyCustomer2");
+
+        customerRepository.save(customer1);
+        customerRepository.save(customer2);
+
+        List<Customer> customerList = customerRepository.findAll();
+
+        assertEquals(2, customerList.size());
+        assertEquals("MyCustomer1", customerList.get(0).getName());
+        assertEquals("MyCustomer2", customerList.get(1).getName());
     }
 
     @Test

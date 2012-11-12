@@ -5,6 +5,8 @@ import com.masternaut.PaddingtonException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.List;
+
 public class BaseSystemRepository<T extends Identifiable> {
     protected MongoTemplate mongoTemplate;
     private Class<T> clazz;
@@ -33,5 +35,9 @@ public class BaseSystemRepository<T extends Identifiable> {
 
     public void deleteAll() {
         mongoTemplate.remove(new Query(), clazz);
+    }
+
+    public List<T> findAll() {
+        return mongoTemplate.findAll(clazz);
     }
 }
