@@ -20,6 +20,8 @@ public class HomeController {
         this.repositoryFactory = repositoryFactory;
     }
 
+    // http://localhost:8081/paddingtonData-adminWebPages/
+    // http://localhost:8081/paddingtonData-adminWebPages/home
     @RequestMapping({"/", "/home"})
     public String showHomePage(Map<String, Object> model){
         CustomerRepository repository = repositoryFactory.createRepository(CustomerRepository.class);
