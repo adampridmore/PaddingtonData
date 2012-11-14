@@ -6,6 +6,8 @@ import com.masternaut.factory.RepositoryFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.List;
+
 public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     private RepositoryFactory repositoryFactory;
     private Class<T> clazz;
@@ -39,5 +41,17 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         t.setCustomerId(customerId);
 
         return t;
+    }
+
+    public List<T> findAllForCustomer(String customerId) {
+        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+
+        List<T> entities = mongoTemplate.findAll(clazz);
+
+        for(T t : entities){
+            t.setCustomerId(customerId);
+        }
+
+        return entities;
     }
 }

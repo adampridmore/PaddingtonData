@@ -79,10 +79,15 @@ public class RepositoryFactory {
     public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
-        return createMongoTemplate(customer.getDomainMongoConnectionDetails());
+        return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
     }
 
-    private MongoTemplate createMongoTemplate(MongoConnectionDetails domainMongoConnectionDetails) {
+    private MongoTemplate createMongoTemplate(MongoConnectionDetails domainMongoConnectionDetails, String customerId) {
+
+        if (domainMongoConnectionDetails == null){
+            throw new PaddingtonException("Invalid domainMongoConnectionDetails on for customer id: " + customerId);
+        }
+
         Mongo mongo;
         try {
             mongo = new Mongo(domainMongoConnectionDetails.getHostname(), domainMongoConnectionDetails.getPort());
