@@ -8,10 +8,20 @@
         <param-value>/WEB-INF/spring/root-context.xml</param-value>
     </context-param>
 
-    <!--<context-param>-->
-        <!--<param-name>engine_settings_port</param-name>-->
-        <!--<param-value>27017</param-value>-->
-    <!--</context-param>-->
+    <context-param>
+        <param-name>mongo.system.hostname</param-name>
+        <param-value>localhost</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>mongo.system.port</param-name>
+        <param-value>27017</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>mongo.system.databaseName</param-name>
+        <param-value>UnitTest_System</param-value>
+    </context-param>
 
     <servlet>
         <servlet-name>adminWebPages</servlet-name>
