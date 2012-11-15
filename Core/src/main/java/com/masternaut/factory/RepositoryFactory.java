@@ -6,6 +6,7 @@ import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.system.CustomerRepository;
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class RepositoryFactory {
@@ -38,6 +43,19 @@ public class RepositoryFactory {
         }
 
         throw new PaddingtonException("Unknown repository type: " + clazz.getSimpleName());
+    }
+
+    public List<String> getDatabaseConnectionInformation(){
+        List<String> properties = new ArrayList<String>();
+
+        properties.add(String.format("SystemDatabaseName - %s", systemMongoTemplate.getDb().getName()));
+
+        List<ServerAddress> serverAddressList = systemMongoTemplate.getDb().getMongo().getServerAddressList();
+        for(ServerAddress serverAddress : serverAddressList){
+            properties.add(String.format("Host - %s:%d", serverAddress.getHost(), serverAddress.getPort()));
+        }
+
+        return properties;
     }
 
     private CustomerRepository getCustomerRepository() {

@@ -3,3 +3,9 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <a href="customers">Customers</a>
+
+<ul>
+    <c:forEach var="systemProperty" items="${systemProperties}">
+        <li>${systemProperty}</li>
+    </c:forEach>
+</ul>
