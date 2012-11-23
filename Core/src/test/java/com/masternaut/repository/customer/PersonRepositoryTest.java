@@ -11,17 +11,16 @@ public class PersonRepositoryTest extends BaseCustomerRepositoryTest {
     @Before
     public void before() {
         personRepository = repositoryFactory.createRepository(PersonRepository.class);
-        personRepository.deleteAll("MyCustomerId");
     }
 
     @Test
     public void loadAndSave(){
         Person person = new Person();
-        person.setCustomerId("MyCustomerId");
+        person.setCustomerId(customer1.getId());
         person.setName("MyPersonName");
 
         personRepository.save(person);
 
-        personRepository.findById(person.getId(), "MyCustomerId");
+        personRepository.findById(person.getId(), customer1.getId());
     }
 }

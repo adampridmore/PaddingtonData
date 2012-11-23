@@ -33,6 +33,7 @@
         </property>
     </bean>
 
+    <!--<mongo:mongo replica-set="${mongo.system.mongoUri}"/>-->
     <mongo:mongo host="${mongo.system.hostname}" port="${mongo.system.port}"/>
 
     <bean id="systemMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">

@@ -1,5 +1,6 @@
 package com.masternaut.paddingtonData.adminWebPages;
 
+import com.masternaut.BulkInsertBatcher;
 import com.masternaut.CustomerIdentifiable;
 import com.masternaut.domain.Asset;
 import com.masternaut.domain.Customer;
@@ -8,11 +9,14 @@ import com.masternaut.factory.RepositoryFactory;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.PersonRepository;
+import com.masternaut.repository.customer.RouteResultRepository;
 import com.masternaut.repository.system.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,29 +28,73 @@ import java.util.Map;
 public class DemoDataController {
 
     private RepositoryFactory repositoryFactory;
+    private final String longString = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+    CustomerRepository customerRepository;
+    AssetRepository assetRepository;
+    PersonRepository personRepository;
+    RouteResultRepository routeResultRepository;
 
     @Autowired
     public DemoDataController(RepositoryFactory repositoryFactory) {
         this.repositoryFactory = repositoryFactory;
+
+        customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
+        assetRepository = repositoryFactory.createRepository(AssetRepository.class);
+        personRepository = repositoryFactory.createRepository(PersonRepository.class);
+        routeResultRepository = repositoryFactory.createRepository(RouteResultRepository.class);
+
     }
 
-    // http://localhost:8081/paddingtonData-adminWebPages/
-    // http://localhost:8081/paddingtonData-adminWebPages/home
     @RequestMapping({"reset"})
     public RedirectView resetDemoData(Map<String, Object> model) {
+        clearAllData();
+
+        Integer assetIndex = 0;
+
+        for (int i = 0; i < 10; i++) {
+            String customerDatabaseName = "Customers_Default";
+
+            if (i == 9){
+                customerDatabaseName = "Customer_" + Integer.toString(i);
+            }
+
+            Customer customer = createAndSaveCustomer(Integer.toString(i), customerDatabaseName);
+
+            int numberOfAssetToCreate = (i + 1) * 10;
+
+            assetIndex += createAssets(customer, numberOfAssetToCreate, assetIndex);
+        }
+
+        return new RedirectView("../customers");
+    }
+
+    @RequestMapping({"simulateLoad"})
+    public RedirectView simulateLoad(@RequestParam(value = "numberToCreate", defaultValue = "1000") int numberToCreate) {
+        throw new NotImplementedException();
+    }
+
+    @RequestMapping({"clearAllData"})
+    public RedirectView clearAllData() {
+        repositoryFactory.clearCustomerDatabase();
+
+        return new RedirectView("../customers");
+    }
+
+    @RequestMapping({"syncCustomerStatistics"})
+    public RedirectView syncCustomerStatistics() {
         CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-
-        customerRepository.deleteAll();
-
-        Customer customer1 = createAndSaveCustomer(customerRepository, "MyCustomerName1");
-        Customer customer2 = createAndSaveCustomer(customerRepository, "MyCustomerName2");
-
         AssetRepository assetRepository = repositoryFactory.createRepository(AssetRepository.class);
 
-        deleteDomainData(Arrays.asList(customer1, customer2));
+        for(Customer customer : customerRepository.findAll()){
+            long numberOfAssets = assetRepository.countForCustomerId(customer.getId());
+            customer.setNumberOfAssets(numberOfAssets);
 
-        createAssets(assetRepository, customer1);
-        createAssets(assetRepository, customer2);
+            long numberOfRouteResults = routeResultRepository.countForCustomerId(customer.getId());
+            customer.setNumberOfRouteResults(numberOfRouteResults);
+
+            customerRepository.save(customer);
+        }
 
         return new RedirectView("../customers");
     }
@@ -61,37 +109,49 @@ public class DemoDataController {
 
         for (BaseCustomerRepository domainRepository : domainRepositories) {
             for (Customer customer : customers) {
-                domainRepository.deleteAll(customer.getId());
+                domainRepository.deleteAllForCustomer(customer.getId());
             }
         }
     }
 
     private Iterable<BaseCustomerRepository> createDomainRepositories(List<Class<? extends BaseCustomerRepository<? extends CustomerIdentifiable>>> domainRepositoryClasses) {
         ArrayList<BaseCustomerRepository> list = new ArrayList<BaseCustomerRepository>();
-        for(Class<? extends BaseCustomerRepository<? extends CustomerIdentifiable>> clazz : domainRepositoryClasses){
+        for (Class<? extends BaseCustomerRepository<? extends CustomerIdentifiable>> clazz : domainRepositoryClasses) {
             list.add(repositoryFactory.createRepository(clazz));
         }
         return list;
     }
 
-    private void createAssets(AssetRepository assetRepository, Customer customer) {
-        for (int i = 0; i < 10; i++) {
+    private int createAssets(Customer customer, int numberToCreate, Integer assetIndex) {
+
+        BulkInsertBatcher<Asset> batcher = new BulkInsertBatcher<Asset>(assetRepository);
+
+        for (int i = 0; i < numberToCreate; i++) {
             Asset asset = new Asset();
-            asset.setName(String.format("Asset_%d", i));
+            asset.setName(String.format("Asset_%d_%s", i, longString));
             asset.setCustomerId(customer.getId());
 
-            assetRepository.save(asset);
+            asset.setId(Integer.toString(assetIndex));
+            assetIndex++;
+
+            batcher.add(asset);
         }
+
+        batcher.flush();
+
+        return numberToCreate;
     }
 
-    private Customer createAndSaveCustomer(CustomerRepository repository, String customerName) {
+    private Customer createAndSaveCustomer(String customerId, String customerDatabaseName) {
         Customer customer = new Customer();
+        customer.setId(customerId);
 
-        String databaseName = String.format("CustomerDomain_%s", customerName);
+        customer.setName(String.format("CustomerName_%s", customerId));
+
+        String databaseName = String.format("Test_System_%s", customerDatabaseName);
         customer.setDomainMongoConnectionDetails(new MongoConnectionDetails(databaseName));
 
-        customer.setName(customerName);
-        repository.save(customer);
+        customerRepository.save(customer);
 
         return customer;
     }

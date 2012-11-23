@@ -17,20 +17,34 @@ public abstract class BaseCustomerRepositoryTest {
     @Autowired
     protected RepositoryFactory repositoryFactory;
 
-    protected final String testCustomerId = "MyCustomerId";
+    protected Customer customer1;
+    protected Customer customer2;
+    protected Customer customer3;
 
     @Before
-    public void baseBefore(){
+    public void baseBefore() {
         CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
         customerRepository.deleteAll();
 
-        Customer customer = new Customer();
-        customer.setId(testCustomerId);
-        customer.setName("MyCustomerName");
+        String sharedCustomerDatabaseName = "SharedCustomerDatabase";
 
-        MongoConnectionDetails connectionDetails= new MongoConnectionDetails("UnitTest_MyCustomerName_Domain");
+        customer1 = createAndSaveTestCustomer(1, customerRepository, sharedCustomerDatabaseName);
+        customer2 = createAndSaveTestCustomer(2, customerRepository, sharedCustomerDatabaseName);
+        customer3 = createAndSaveTestCustomer(3, customerRepository, "SingleCustomerDatabase");
+
+        repositoryFactory.clearCustomerDatabase();
+    }
+
+    private Customer createAndSaveTestCustomer(int customerId, CustomerRepository customerRepository, Object customerDatabaseName) {
+        Customer customer = new Customer();
+        customer.setId(String.format("MyCustomerId%d", customerId));
+        customer.setName(String.format("MyCustomerName%d", customerId));
+
+        MongoConnectionDetails connectionDetails = new MongoConnectionDetails(String.format("UnitTest_%s", customerDatabaseName));
         customer.setDomainMongoConnectionDetails(connectionDetails);
 
         customerRepository.save(customer);
+
+        return customer;
     }
 }

@@ -117,7 +117,6 @@ public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
 
     @Test
     public void findByNameWhenTooManyMatch() {
-
         String customerName = "MySameCustomerName";
 
         Customer customer1 = new Customer();
