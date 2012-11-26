@@ -67,6 +67,33 @@ public class RepositoryFactory {
         return properties;
     }
 
+    @Cacheable(value = "repositoryFactory")
+    public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
+        Customer customer = customerRepository.findById(customerId);
+
+        return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
+    }
+
+    public MongoTemplate createSystemMongoTemplate() {
+        return systemMongoTemplate;
+    }
+
+    public void clearCustomerDatabase() {
+        CustomerRepository customerRepository = createRepository(CustomerRepository.class);
+        List<Customer> allCustomers = customerRepository.findAll();
+
+        List<BaseCustomerRepository> allCustomerRepositories = new ArrayList<BaseCustomerRepository>();
+        allCustomerRepositories.add(createRepository(AssetRepository.class));
+        allCustomerRepositories.add(createRepository(RouteResultRepository.class));
+        allCustomerRepositories.add(createRepository(PersonRepository.class));
+
+        for (Customer customer : allCustomers) {
+            for (BaseCustomerRepository baseCustomerRepository : allCustomerRepositories) {
+                baseCustomerRepository.deleteAllForCustomer(customer.getId());
+            }
+        }
+    }
+
     private CustomerRepository getCustomerRepository() {
         if (customerRepository == null) {
             this.customerRepository = new CustomerRepository(systemMongoTemplate);
@@ -111,17 +138,6 @@ public class RepositoryFactory {
         return annotation;
     }
 
-    @Cacheable(value = "repositoryFactory")
-    public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
-        Customer customer = customerRepository.findById(customerId);
-
-        return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
-    }
-
-    public MongoTemplate createSystemMongoTemplate() {
-        return systemMongoTemplate;
-    }
-
     private MongoTemplate createMongoTemplate(MongoConnectionDetails domainMongoConnectionDetails, String customerId) {
         if (domainMongoConnectionDetails == null) {
             throw new PaddingtonException("Invalid domainMongoConnectionDetails on for customer id: " + customerId);
@@ -135,21 +151,5 @@ public class RepositoryFactory {
         }
 
         return new MongoTemplate(mongo, domainMongoConnectionDetails.getDatabaseName());
-    }
-
-    public void clearCustomerDatabase() {
-        CustomerRepository customerRepository = createRepository(CustomerRepository.class);
-        List<Customer> allCustomers = customerRepository.findAll();
-
-        List<BaseCustomerRepository> allCustomerRepositories = new ArrayList<BaseCustomerRepository>();
-        allCustomerRepositories.add(createRepository(AssetRepository.class));
-        allCustomerRepositories.add(createRepository(RouteResultRepository.class));
-        allCustomerRepositories.add(createRepository(PersonRepository.class));
-
-        for (Customer customer : allCustomers) {
-            for (BaseCustomerRepository baseCustomerRepository : allCustomerRepositories) {
-                baseCustomerRepository.deleteAllForCustomer(customer.getId());
-            }
-        }
     }
 }
