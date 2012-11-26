@@ -8,7 +8,7 @@
            maxElementsInMemory="1000"
            overflowToDisk="false"
            diskPersistent="false"
-           timeToIdleSeconds="600"
-           timeToLiveSeconds="600"
+           timeToIdleSeconds="10"
+           timeToLiveSeconds="10"
            memoryStoreEvictionPolicy="LRU" />
 </ehcache>

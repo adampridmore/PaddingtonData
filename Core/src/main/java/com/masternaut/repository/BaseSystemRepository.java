@@ -2,18 +2,19 @@ package com.masternaut.repository;
 
 import com.masternaut.Identifiable;
 import com.masternaut.PaddingtonException;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 
 public class BaseSystemRepository<T extends Identifiable> {
+    @Autowired
     protected MongoTemplate mongoTemplate;
+
     private Class<T> clazz;
 
-    public BaseSystemRepository(MongoTemplate mongoTemplate, Class<T> clazz) {
-        this.mongoTemplate = mongoTemplate;
+    public BaseSystemRepository(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -21,7 +22,6 @@ public class BaseSystemRepository<T extends Identifiable> {
         mongoTemplate.save(t);
     }
 
-    @Cacheable(value = "defaultRepositoryCache")
     public T findById(String id) {
         T t = mongoTemplate.findById(id, clazz);
         if (t == null) {

@@ -17,7 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Constructor;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,27 +30,11 @@ public class RepositoryFactory {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private CustomerRepository customerRepository;
-
     public RepositoryFactory() {
     }
 
     public <T> T createRepository(Class<T> clazz) {
-        if (clazz.equals(CustomerRepository.class)) {
-            return (T) getCustomerRepository();
-        }
-
-        PaddingtonDatabase databaseAnnotation = getPaddingtonDatabaseAnnotation(clazz);
-
-        if (databaseAnnotation.type() == PaddingtonDatabase.DatabaseType.System) {
-            return createSystemRepository(clazz);
-        }
-
-        if (databaseAnnotation.type() == PaddingtonDatabase.DatabaseType.Customer) {
-            return createCustomerRepository(clazz);
-        }
-
-        throw new PaddingtonException("Unknown repository type: " + clazz.getSimpleName());
+        return applicationContext.getBean(clazz);
     }
 
     public List<String> getDatabaseConnectionInformation() {
@@ -69,6 +52,8 @@ public class RepositoryFactory {
 
     @Cacheable(value = "defaultRepositoryCache")
     public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
+        CustomerRepository customerRepository = createRepository(CustomerRepository.class);
+
         Customer customer = customerRepository.findById(customerId);
 
         return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
@@ -87,28 +72,6 @@ public class RepositoryFactory {
             for (BaseCustomerRepository baseCustomerRepository : allCustomerRepositories) {
                 baseCustomerRepository.deleteAllForCustomer(customer.getId());
             }
-        }
-    }
-
-    private CustomerRepository getCustomerRepository() {
-        if (customerRepository == null) {
-            this.customerRepository = new CustomerRepository(systemMongoTemplate);
-        }
-
-        return customerRepository;
-    }
-
-    private <T> T createCustomerRepository(Class<T> repositoryClazz) {
-        return applicationContext.getBean(repositoryClazz);
-    }
-
-    // TODO - Can we use Spring to create repository bean?
-    private <T> T createSystemRepository(Class<T> clazz) {
-        try {
-            Constructor<T> constructor = clazz.getConstructor(MongoTemplate.class);
-            return constructor.newInstance(systemMongoTemplate);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
         }
     }
 

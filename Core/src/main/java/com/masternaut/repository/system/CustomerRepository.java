@@ -1,19 +1,26 @@
 package com.masternaut.repository.system;
 
 import com.masternaut.PaddingtonDatabase;
-import com.masternaut.repository.BaseSystemRepository;
 import com.masternaut.domain.Customer;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import com.masternaut.repository.BaseSystemRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
+@Component
 public class CustomerRepository extends BaseSystemRepository<Customer>{
+    public CustomerRepository() {
+        super(Customer.class);
+    }
 
-    public CustomerRepository(MongoTemplate mongoTemplate) {
-        super(mongoTemplate, Customer.class);
+    @Override
+    @Cacheable(value = "defaultRepositoryCache")
+    public Customer findById(String id) {
+        return super.findById(id);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     public Customer tryFindByName(String customerName) {

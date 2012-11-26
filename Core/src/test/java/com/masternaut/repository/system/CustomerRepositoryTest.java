@@ -135,4 +135,16 @@ public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
             assertEquals(String.format("Too many customers found with name: '%s'.", customerName), t.getMessage());
         }
     }
+
+    @Test
+    public void caching_findById(){
+        Customer customer = new Customer();
+        customer.setName("MyName");
+        customerRepository.save(customer);
+
+        Customer loadedCustomer1 = customerRepository.findById(customer.getId());
+        Customer loadedCustomer2 = customerRepository.findById(customer.getId());
+
+        assertSame(loadedCustomer1,  loadedCustomer2);
+    }
 }

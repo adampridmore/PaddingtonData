@@ -3,12 +3,14 @@ package com.masternaut.repository.system;
 import com.masternaut.PaddingtonDatabase;
 import com.masternaut.domain.SystemSettings;
 import com.masternaut.repository.BaseSystemRepository;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import static com.masternaut.PaddingtonDatabase.*;
+import org.springframework.stereotype.Component;
+
+import static com.masternaut.PaddingtonDatabase.DatabaseType;
 
 @PaddingtonDatabase(type = DatabaseType.System)
+@Component
 public class SystemSettingsRepository extends BaseSystemRepository<SystemSettings>{
-    public SystemSettingsRepository(MongoTemplate mongoTemplate) {
-        super(mongoTemplate, SystemSettings.class);
+    public SystemSettingsRepository() {
+        super(SystemSettings.class);
     }
 }

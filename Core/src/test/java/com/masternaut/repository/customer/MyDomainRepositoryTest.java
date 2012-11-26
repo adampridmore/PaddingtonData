@@ -4,6 +4,7 @@ import com.masternaut.PaddingtonException;
 import com.masternaut.repository.BaseCustomerRepositoryTest;
 import com.masternaut.repository.domain.MyDomain;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.StopWatch;
@@ -12,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static com.mongodb.util.ThreadUtil.sleep;
+import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -147,7 +150,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
-    public void customer_MongoTemplate_are_cached(){
+    public void customer_MongoTemplate_are_cached_and_quick(){
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -159,5 +162,19 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         assertEquals(1, lotsOfCustomerConnections.size());
         assertTrue(stopWatch.getTotalTimeSeconds() < 1);
+    }
+
+    @Test
+    @Ignore("slow")
+    public void default_cache_is_for_10_seconds(){
+        MongoTemplate  mongoTemplate1= (MongoTemplate) myDomainRepository.createLotsOfCustomerConnections(customer1.getId(), 1).toArray()[0];
+
+        int elevenSeconds = 11000;
+
+        sleep(elevenSeconds);
+
+        MongoTemplate mongoTemplate2 = (MongoTemplate) myDomainRepository.createLotsOfCustomerConnections(customer1.getId(), 1).toArray()[0];
+
+        assertNotSame(mongoTemplate1,  mongoTemplate2);
     }
 }
