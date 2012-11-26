@@ -74,10 +74,6 @@ public class RepositoryFactory {
         return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
     }
 
-    public MongoTemplate createSystemMongoTemplate() {
-        return systemMongoTemplate;
-    }
-
     public void clearCustomerDatabase() {
         CustomerRepository customerRepository = createRepository(CustomerRepository.class);
         List<Customer> allCustomers = customerRepository.findAll();
@@ -107,7 +103,7 @@ public class RepositoryFactory {
             Constructor<T> constructor = clazz.getConstructor(RepositoryFactory.class);
 
             // We have to get the RepositoryFactory from the springContext so we get the one
-            // wrapped with a cache. And not use 'this'.
+            // wrapped with any caching. And not use 'this'.
             RepositoryFactory repositoryFactory = applicationContext.getBean(RepositoryFactory.class);
 
             return constructor.newInstance(repositoryFactory);
