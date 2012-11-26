@@ -1,18 +1,19 @@
 package com.masternaut.repository.customer;
 
 import com.masternaut.PaddingtonDatabase;
-import com.masternaut.factory.RepositoryFactory;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.domain.MyDomain;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.Customer)
+@Component
 public class MyDomainRepository extends BaseCustomerRepository<MyDomain> {
-    public MyDomainRepository(RepositoryFactory repositoryFactory) {
-        super(repositoryFactory, MyDomain.class);
+    public MyDomainRepository() {
+        super( MyDomain.class);
     }
 
     public Set<MongoTemplate> createLotsOfCustomerConnections(String customerId, int numberToCreate) {

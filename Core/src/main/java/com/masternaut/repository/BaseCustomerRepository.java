@@ -6,6 +6,7 @@ import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.factory.RepositoryFactory;
 import com.masternaut.repository.system.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseCustomerRepository<T extends CustomerIdentifiable> {
+
+    @Autowired
     protected RepositoryFactory repositoryFactory;
+
     private Class<T> clazz;
 
-    public BaseCustomerRepository(RepositoryFactory repositoryFactory, Class<T> clazz) {
-        this.repositoryFactory = repositoryFactory;
+    public BaseCustomerRepository(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -103,7 +106,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         return entities;
     }
 
-    public long count() {
+    public long countForAllCustomers() {
         CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
 
         List<Customer> allCustomers = customerRepository.findAll();

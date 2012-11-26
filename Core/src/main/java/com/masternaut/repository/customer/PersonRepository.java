@@ -1,13 +1,14 @@
 package com.masternaut.repository.customer;
 
 import com.masternaut.PaddingtonDatabase;
-import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.domain.Person;
-import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.repository.BaseCustomerRepository;
+import org.springframework.stereotype.Component;
 
 @PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.Customer)
+@Component
 public class PersonRepository extends BaseCustomerRepository<Person>{
-    public PersonRepository(RepositoryFactory repositoryFactory) {
-        super(repositoryFactory, Person.class);
+    public PersonRepository() {
+        super(Person.class);
     }
 }

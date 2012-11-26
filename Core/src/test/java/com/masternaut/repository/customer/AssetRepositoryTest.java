@@ -29,4 +29,18 @@ public class AssetRepositoryTest extends BaseCustomerRepositoryTest {
         assertEquals("MyAssetName", loadedAsset.getName());
         assertEquals(customer1.getId(), loadedAsset.getCustomerId());
     }
+
+    @Test
+    public void loadCaching(){
+        Asset asset = new Asset();
+        asset.setCustomerId(customer1.getId());
+        asset.setName("MyAssetName");
+
+        assetRepository.save(asset);
+
+        Asset loadedAsset1 = assetRepository.findById(asset.getId(), customer1.getId());
+        Asset loadedAsset2 = assetRepository.findById(asset.getId(), customer1.getId());
+
+        assertEquals(loadedAsset1, loadedAsset2);
+    }
  }

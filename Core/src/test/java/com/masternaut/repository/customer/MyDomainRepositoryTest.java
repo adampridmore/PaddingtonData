@@ -105,7 +105,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         myDomainRepository.save(a1);
         myDomainRepository.save(a2);
 
-        assertEquals(2, myDomainRepository.count());
+        assertEquals(2, myDomainRepository.countForAllCustomers());
     }
 
     @Test

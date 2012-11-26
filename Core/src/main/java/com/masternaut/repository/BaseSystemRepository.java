@@ -21,7 +21,7 @@ public class BaseSystemRepository<T extends Identifiable> {
         mongoTemplate.save(t);
     }
 
-    @Cacheable(value = "repositoryFactory")
+    @Cacheable(value = "defaultRepositoryCache")
     public T findById(String id) {
         T t = mongoTemplate.findById(id, clazz);
         if (t == null) {

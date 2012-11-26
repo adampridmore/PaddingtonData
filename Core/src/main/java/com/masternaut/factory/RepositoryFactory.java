@@ -67,7 +67,7 @@ public class RepositoryFactory {
         return properties;
     }
 
-    @Cacheable(value = "repositoryFactory")
+    @Cacheable(value = "defaultRepositoryCache")
     public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
@@ -98,24 +98,11 @@ public class RepositoryFactory {
         return customerRepository;
     }
 
-    private <T> T createCustomerRepository(Class<T> clazz) {
-        try {
-            Constructor<T> constructor = clazz.getConstructor(RepositoryFactory.class);
-
-            // We have to get the RepositoryFactory from the springContext so we get the one
-            // wrapped with any caching. And not use 'this'.
-            RepositoryFactory repositoryFactory = applicationContext.getBean(RepositoryFactory.class);
-
-            return constructor.newInstance(repositoryFactory);
-        } catch (Throwable t) {
-            String error = String.format("%s needs a constructor that takes a %s as the single parameter",
-                    clazz.getSimpleName(),
-                    RepositoryFactory.class.getSimpleName());
-
-            throw new PaddingtonException(error, t);
-        }
+    private <T> T createCustomerRepository(Class<T> repositoryClazz) {
+        return applicationContext.getBean(repositoryClazz);
     }
 
+    // TODO - Can we use Spring to create repository bean?
     private <T> T createSystemRepository(Class<T> clazz) {
         try {
             Constructor<T> constructor = clazz.getConstructor(MongoTemplate.class);
