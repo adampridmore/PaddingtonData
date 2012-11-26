@@ -16,19 +16,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("customers")
 public class CustomersController {
-    private RepositoryFactory repositoryFactory;
-
-    private CustomerRepository customerRepository;
-
     @Autowired
-    public CustomersController(RepositoryFactory repositoryFactory) {
-        this.repositoryFactory = repositoryFactory;
-
-        customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-    }
+    private RepositoryFactory repositoryFactory;
 
     @RequestMapping({"", "index"})
     public String index(Map<String, Object> model) {
+        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
+
         List<Customer> customerList = customerRepository.findAll();
 
         model.put("customers", customerList);
@@ -39,6 +33,7 @@ public class CustomersController {
     @RequestMapping({"details/{customerId}"})
     public String details(@PathVariable String customerId,
                           Map<String, Object> model) {
+        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
 
         Customer customer = customerRepository.findById(customerId);
 

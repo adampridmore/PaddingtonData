@@ -50,7 +50,7 @@ public class RepositoryFactory {
         return properties;
     }
 
-    @Cacheable(value = "defaultRepositoryCache")
+    @Cacheable(value = "customerMongoTemplate")
     public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
         CustomerRepository customerRepository = createRepository(CustomerRepository.class);
 

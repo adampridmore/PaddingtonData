@@ -27,24 +27,10 @@ import java.util.Map;
 @RequestMapping("demoData")
 public class DemoDataController {
 
-    private RepositoryFactory repositoryFactory;
-    private final String longString = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
-    CustomerRepository customerRepository;
-    AssetRepository assetRepository;
-    PersonRepository personRepository;
-    RouteResultRepository routeResultRepository;
-
     @Autowired
-    public DemoDataController(RepositoryFactory repositoryFactory) {
-        this.repositoryFactory = repositoryFactory;
+    private RepositoryFactory repositoryFactory;
 
-        customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-        assetRepository = repositoryFactory.createRepository(AssetRepository.class);
-        personRepository = repositoryFactory.createRepository(PersonRepository.class);
-        routeResultRepository = repositoryFactory.createRepository(RouteResultRepository.class);
-
-    }
+    private final String longString = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
     @RequestMapping({"reset"})
     public RedirectView resetDemoData(Map<String, Object> model) {
@@ -66,7 +52,7 @@ public class DemoDataController {
             assetIndex += createAssets(customer, numberOfAssetToCreate, assetIndex);
         }
 
-        return new RedirectView("../customers");
+        return syncCustomerStatistics();
     }
 
     @RequestMapping({"simulateLoad"})
@@ -85,6 +71,7 @@ public class DemoDataController {
     public RedirectView syncCustomerStatistics() {
         CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
         AssetRepository assetRepository = repositoryFactory.createRepository(AssetRepository.class);
+        RouteResultRepository routeResultRepository = repositoryFactory.createRepository(RouteResultRepository.class);
 
         for(Customer customer : customerRepository.findAll()){
             long numberOfAssets = assetRepository.countForCustomerId(customer.getId());
@@ -124,6 +111,8 @@ public class DemoDataController {
 
     private int createAssets(Customer customer, int numberToCreate, Integer assetIndex) {
 
+        AssetRepository assetRepository = repositoryFactory.createRepository(AssetRepository.class);
+
         BulkInsertBatcher<Asset> batcher = new BulkInsertBatcher<Asset>(assetRepository);
 
         for (int i = 0; i < numberToCreate; i++) {
@@ -150,6 +139,8 @@ public class DemoDataController {
 
         String databaseName = String.format("Test_System_%s", customerDatabaseName);
         customer.setDomainMongoConnectionDetails(new MongoConnectionDetails(databaseName));
+
+        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
 
         customerRepository.save(customer);
 

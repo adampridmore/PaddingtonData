@@ -13,7 +13,7 @@ public class AssetRepository extends BaseCustomerRepository<Asset> {
         super(Asset.class);
     }
 
-    @Cacheable(value = "defaultRepositoryCache")
+    @Cacheable(value = "asset")
     @Override
     public Asset findById(String id, String customerId) {
         return super.findById(id, customerId);    //To change body of overridden methods use File | Settings | File Templates.

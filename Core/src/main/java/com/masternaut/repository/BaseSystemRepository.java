@@ -3,6 +3,7 @@ package com.masternaut.repository;
 import com.masternaut.Identifiable;
 import com.masternaut.PaddingtonException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -22,6 +23,7 @@ public class BaseSystemRepository<T extends Identifiable> {
         mongoTemplate.save(t);
     }
 
+    @Cacheable(value = "customer")
     public T findById(String id) {
         T t = mongoTemplate.findById(id, clazz);
         if (t == null) {

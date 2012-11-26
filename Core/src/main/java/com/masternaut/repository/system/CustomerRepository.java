@@ -3,7 +3,6 @@ package com.masternaut.repository.system;
 import com.masternaut.PaddingtonDatabase;
 import com.masternaut.domain.Customer;
 import com.masternaut.repository.BaseSystemRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -15,12 +14,6 @@ import java.util.List;
 public class CustomerRepository extends BaseSystemRepository<Customer>{
     public CustomerRepository() {
         super(Customer.class);
-    }
-
-    @Override
-    @Cacheable(value = "defaultRepositoryCache")
-    public Customer findById(String id) {
-        return super.findById(id);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     public Customer tryFindByName(String customerName) {
