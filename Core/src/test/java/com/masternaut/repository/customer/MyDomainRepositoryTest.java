@@ -180,4 +180,18 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         assertNotSame(mongoTemplate1,  mongoTemplate2);
     }
+
+    @Test
+    public void deleteById(){
+        MyDomain domain1 = new MyDomain("a", customer1.getId());
+        MyDomain domain2 = new MyDomain("b", customer1.getId());
+
+        myDomainRepository.save(domain1, domain2);
+
+        myDomainRepository.deleteById(domain1.getId(), customer1.getId());
+
+        List<MyDomain> allForCustomer = myDomainRepository.findAllForCustomer(customer1.getId());
+        assertEquals(1, allForCustomer.size());
+        assertEquals("b", allForCustomer.get(0).getName());
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BaseCustomerRepository<T extends CustomerIdentifiable> {
@@ -22,7 +23,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     @Autowired
     private CustomerRepository customerRepository;
 
-    private Class<T> clazz;
+    protected Class<T> clazz;
 
     public BaseCustomerRepository(Class<T> clazz) {
         this.clazz = clazz;
@@ -37,7 +38,16 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         mongoOperations.remove(query, clazz);
     }
 
-    private Criteria createCriteriaForCustomer(String customerId) {
+    public void deleteById(String id, String customerId) {
+        MongoOperations mongoOperations = customerMongoFactory.create(customerId);
+
+        Criteria criteria = createCriteriaForCustomer(customerId);
+        criteria.and("id").is(id);
+
+        mongoOperations.remove(new Query(criteria), clazz);
+    }
+
+    protected Criteria createCriteriaForCustomer(String customerId) {
         return Criteria.where("customerId").is(customerId);
     }
 
@@ -67,6 +77,10 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         MongoOperations mongoTemplate = customerMongoFactory.create(t.getCustomerId());
 
         mongoTemplate.save(t);
+    }
+
+    public void save(T... tlist) {
+        save(Arrays.asList(tlist));
     }
 
     public void save(Iterable<T> tlist) {

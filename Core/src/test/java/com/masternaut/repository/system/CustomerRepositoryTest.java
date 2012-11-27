@@ -21,7 +21,7 @@ public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
     }
 
     @Test
-    public void saveAndLoad() {
+    public void save_and_findById() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
         customer.setDatabaseName("MyDatabaseName");
@@ -34,6 +34,20 @@ public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
         assertEquals("MyCustomerName", loadedCustomer.getName());
         assertEquals("MyDatabaseName", loadedCustomer.getDatabaseName());
     }
+
+    @Test
+    public void tryFindById_when_present() {
+        Customer customer = new Customer();
+        customer.setName("MyCustomerName");
+        customer.setDatabaseName("MyDatabaseName");
+
+        customerRepository.save(customer);
+
+        Customer loadedCustomer = customerRepository.tryFindById(customer.getId());
+
+        assertEquals(customer.getId(), loadedCustomer.getId());
+    }
+
 
     @Test
     public void loadByInvalidId() {
@@ -139,5 +153,34 @@ public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
         Customer loadedCustomer2 = customerRepository.findById(customer.getId());
 
         assertSame(loadedCustomer1,  loadedCustomer2);
+    }
+
+    @Test
+    public void caching_tryFindById(){
+        Customer customer = new Customer();
+        customer.setName("MyName");
+        customerRepository.save(customer);
+
+        Customer loadedCustomer1 = customerRepository.tryFindById(customer.getId());
+        Customer loadedCustomer2 = customerRepository.tryFindById(customer.getId());
+
+        assertSame(loadedCustomer1,  loadedCustomer2);
+    }
+
+    @Test
+    public void delete(){
+        Customer customer1 = new Customer();
+        customer1.setName("a");
+
+        Customer customer2 = new Customer();
+        customer2.setName("b");
+
+        customerRepository.save(customer1,  customer2);
+
+        customerRepository.deleteById(customer1.getId());
+
+        List<Customer> allCustomers = customerRepository.findAll();
+        assertEquals(1, allCustomers.size());
+        assertEquals("b", allCustomers.get(0).getName());
     }
 }

@@ -5,6 +5,14 @@ import com.masternaut.CustomerIdentifiable;
 public class MyDomain extends CustomerIdentifiable {
     private String name;
 
+    public MyDomain(String name, String customerId) {
+        this.name = name;
+        this.setCustomerId(customerId);
+    }
+
+    public MyDomain() {
+    }
+
     public String getName() {
         return name;
     }
