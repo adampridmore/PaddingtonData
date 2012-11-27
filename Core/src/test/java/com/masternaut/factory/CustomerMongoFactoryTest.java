@@ -8,7 +8,7 @@ import org.springframework.util.StopWatch;
 
 import static junit.framework.Assert.assertTrue;
 
-public class RepositoryFactoryTest extends BaseCustomerRepositoryTest {
+public class CustomerMongoFactoryTest extends BaseCustomerRepositoryTest {
     @Test
     public void cachingTest() {
         MongoOperations a = customerMongoFactory.create(customer1.getId());

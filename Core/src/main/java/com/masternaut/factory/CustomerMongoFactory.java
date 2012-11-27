@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class CustomerMongoFactory {
@@ -65,7 +66,7 @@ public class CustomerMongoFactory {
 
     public void clearCustomerDatabase() {
         List<Customer> allCustomers = customerRepository.findAll();
-        List<BaseCustomerRepository> allCustomerRepositories = getAllCustomerSpecificRepositories();
+        Iterable<BaseCustomerRepository> allCustomerRepositories = getAllCustomerSpecificRepositories();
 
         for (Customer customer : allCustomers) {
             for (BaseCustomerRepository baseCustomerRepository : allCustomerRepositories) {
@@ -74,13 +75,10 @@ public class CustomerMongoFactory {
         }
     }
 
-    private List<BaseCustomerRepository> getAllCustomerSpecificRepositories() {
-        // TODO - This should use reflection to get all customer repositories.
-        List<BaseCustomerRepository> allCustomerRepositories = new ArrayList<BaseCustomerRepository>();
-        allCustomerRepositories.add(personRepository);
-        allCustomerRepositories.add(assetRepository);
-        allCustomerRepositories.add(routeResultRepository);
-        return allCustomerRepositories;
+    private Iterable<BaseCustomerRepository> getAllCustomerSpecificRepositories() {
+        Map<String,BaseCustomerRepository> beansOfType = applicationContext.getBeansOfType(BaseCustomerRepository.class);
+
+        return beansOfType.values();
     }
 
     private <T> PaddingtonDatabase getPaddingtonDatabaseAnnotation(Class<T> clazz) {
