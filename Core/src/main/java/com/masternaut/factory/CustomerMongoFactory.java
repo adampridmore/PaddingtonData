@@ -65,7 +65,9 @@ public class CustomerMongoFactory {
     }
 
     public void clearCustomerDatabase() {
+        // TODO - This would be more efficient if it cleared all unique customer databases for all customers.
         List<Customer> allCustomers = customerRepository.findAll();
+
         Iterable<BaseCustomerRepository> allCustomerRepositories = getAllCustomerSpecificRepositories();
 
         for (Customer customer : allCustomers) {
