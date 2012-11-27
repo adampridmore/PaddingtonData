@@ -18,7 +18,7 @@ import java.util.List;
 public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
     @Autowired
-    protected CustomerMongoFactory customerMongoFactory;
+    private CustomerMongoFactory customerMongoFactory;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -27,6 +27,10 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
     public BaseCustomerRepository(Class<T> clazz) {
         this.clazz = clazz;
+    }
+
+    protected MongoOperations createMongoOperations(String customerId){
+        return customerMongoFactory.create(customerId);
     }
 
     public void deleteAllForCustomer(String customerId) {
@@ -144,5 +148,15 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         Criteria criteria = createCriteriaForCustomer(customerId);
 
         return mongoTemplate.count(new Query(criteria), clazz);
+    }
+
+    public List<T> findByIds(List<String> ids, String customerId) {
+        Criteria criteria = createCriteriaForCustomer(customerId);
+
+        criteria.and("id").in(ids);
+
+        MongoOperations mongoOperations = createMongoOperations(customerId);
+
+        return mongoOperations.find(new Query(criteria), clazz);
     }
 }

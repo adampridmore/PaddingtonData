@@ -18,7 +18,7 @@ public class MyDomainRepository extends BaseCustomerRepository<MyDomain> {
         Set<MongoOperations> set = new HashSet<MongoOperations>();
 
         for(int i = 0 ; i < numberToCreate ; i++){
-            MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
+            MongoOperations mongoTemplate = createMongoOperations(customerId);
 
             set.add(mongoTemplate);
         }

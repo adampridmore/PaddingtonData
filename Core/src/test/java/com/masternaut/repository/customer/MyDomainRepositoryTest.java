@@ -194,4 +194,19 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         assertEquals(1, allForCustomer.size());
         assertEquals("b", allForCustomer.get(0).getName());
     }
+
+    @Test
+    public void findByIds(){
+        MyDomain domain1 = new MyDomain("a", customer1.getId());
+        MyDomain domain2 = new MyDomain("b", customer1.getId());
+        MyDomain domain3 = new MyDomain("c", customer1.getId());
+
+        myDomainRepository.save(domain1, domain2, domain3);
+
+        List<MyDomain> foundResults = myDomainRepository.findByIds(Arrays.asList(domain1.getId(),  domain2.getId()), customer1.getId());
+
+        assertEquals(2, foundResults.size());
+        assertEquals("a", foundResults.get(0).getName());
+        assertEquals("b", foundResults.get(1).getName());
+    }
 }
