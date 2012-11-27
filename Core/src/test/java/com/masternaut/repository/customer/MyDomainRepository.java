@@ -1,6 +1,5 @@
 package com.masternaut.repository.customer;
 
-import com.masternaut.PaddingtonDatabase;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.domain.MyDomain;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-@PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.Customer)
 @Component
 public class MyDomainRepository extends BaseCustomerRepository<MyDomain> {
     public MyDomainRepository() {

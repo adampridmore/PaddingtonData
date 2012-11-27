@@ -1,6 +1,5 @@
 package com.masternaut.repository.system;
 
-import com.masternaut.PaddingtonDatabase;
 import com.masternaut.domain.Customer;
 import com.masternaut.repository.BaseSystemRepository;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
 @Component
 public class CustomerRepository extends BaseSystemRepository<Customer>{
     public CustomerRepository() {
