@@ -1,12 +1,7 @@
 package com.masternaut.factory;
 
-import com.masternaut.PaddingtonDatabase;
-import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.repository.BaseCustomerRepository;
-import com.masternaut.repository.customer.AssetRepository;
-import com.masternaut.repository.customer.PersonRepository;
-import com.masternaut.repository.customer.RouteResultRepository;
 import com.masternaut.repository.system.CustomerRepository;
 import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
@@ -28,6 +23,9 @@ public class CustomerMongoFactory {
     private MongoTemplate systemMongoTemplate;
 
     @Autowired
+    private MongoTemplate customersSharedMongoTemplate;
+
+    @Autowired
     private Mongo systemMongo;
 
     @Autowired
@@ -35,15 +33,6 @@ public class CustomerMongoFactory {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
-    private AssetRepository assetRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-    private RouteResultRepository routeResultRepository;
 
     public List<String> getDatabaseConnectionInformation() {
         List<String> properties = new ArrayList<String>();
@@ -62,7 +51,7 @@ public class CustomerMongoFactory {
     public MongoOperations create(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
-        return createMongoTemplate(customer.getDatabaseName(), customerId);
+        return createMongoTemplate(customer.getDatabaseName());
     }
 
     public void clearCustomerDatabase() {
@@ -84,18 +73,9 @@ public class CustomerMongoFactory {
         return beansOfType.values();
     }
 
-    private <T> PaddingtonDatabase getPaddingtonDatabaseAnnotation(Class<T> clazz) {
-        PaddingtonDatabase annotation = clazz.getAnnotation(PaddingtonDatabase.class);
-        if (annotation == null) {
-            throw new PaddingtonException(String.format("%s is missing %s annotation", clazz, PaddingtonDatabase.class.getSimpleName()));
-        }
-
-        return annotation;
-    }
-
-    private MongoOperations createMongoTemplate(String customerDatabaseName, String customerId) {
-        if (customerDatabaseName == null || customerDatabaseName.equals("")) {
-            throw new PaddingtonException("null or empty customerDatabaseName on for customer id: " + customerId);
+    private MongoOperations createMongoTemplate(String customerDatabaseName) {
+        if (customerDatabaseName == null){
+            return customersSharedMongoTemplate;
         }
 
         return new MongoTemplate(systemMongo, customerDatabaseName);

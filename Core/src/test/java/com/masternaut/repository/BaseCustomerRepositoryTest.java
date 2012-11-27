@@ -28,11 +28,9 @@ public abstract class BaseCustomerRepositoryTest {
     public void baseBefore() {
         customerRepository.deleteAll();
 
-        String sharedCustomerDatabaseName = "SharedCustomerDatabase";
-
-        customer1 = createAndSaveTestCustomer(1, customerRepository, sharedCustomerDatabaseName);
-        customer2 = createAndSaveTestCustomer(2, customerRepository, sharedCustomerDatabaseName);
-        customer3 = createAndSaveTestCustomer(3, customerRepository, "SingleCustomerDatabase");
+        customer1 = createAndSaveTestCustomer(1, customerRepository, null);
+        customer2 = createAndSaveTestCustomer(2, customerRepository, null);
+        customer3 = createAndSaveTestCustomer(3, customerRepository, "UnitTest_Customer_3");
 
         customerMongoFactory.clearCustomerDatabase();
     }

@@ -41,10 +41,10 @@ public class DemoDataController {
         Integer assetIndex = 0;
 
         for (int i = 0; i < 10; i++) {
-            String customerDatabaseName = "Customers_Default";
+            String customerDatabaseName = null;
 
             if (i == 9){
-                customerDatabaseName = "Customer_" + Integer.toString(i);
+                customerDatabaseName = "Test_System_Customer_" + Integer.toString(i);
             }
 
             Customer customer = createAndSaveCustomer(Integer.toString(i), customerDatabaseName);
@@ -106,11 +106,8 @@ public class DemoDataController {
     private Customer createAndSaveCustomer(String customerId, String customerDatabaseName) {
         Customer customer = new Customer();
         customer.setId(customerId);
-
         customer.setName(String.format("CustomerName_%s", customerId));
-
-        String databaseName = String.format("Test_System_%s", customerDatabaseName);
-        customer.setDatabaseName(databaseName);
+        customer.setDatabaseName(customerDatabaseName);
 
         customerRepository.save(customer);
 

@@ -38,7 +38,12 @@
 
     <bean id="systemMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="systemMongo"/>
-        <constructor-arg value="${mongo.system.databaseName}"/>
+        <constructor-arg value="${mongo.system.systemDatabaseName}"/>
+    </bean>
+
+    <bean id="customersSharedMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="systemMongo"/>
+        <constructor-arg value="${mongo.system.customersSharedDatabaseName}"/>
     </bean>
 
     <bean id="customerMongoFactory" class="com.masternaut.factory.CustomerMongoFactory"/>

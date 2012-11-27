@@ -38,8 +38,13 @@
     <!-- ********************** -->
 
     <context-param>
-        <param-name>mongo.system.databaseName</param-name>
+        <param-name>mongo.system.systemDatabaseName</param-name>
         <param-value>Test_System</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>mongo.system.customersSharedDatabaseName</param-name>
+        <param-value>Test_System_CustomersShared</param-value>
     </context-param>
 
     <servlet>
