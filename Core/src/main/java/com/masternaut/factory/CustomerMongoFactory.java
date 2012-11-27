@@ -3,7 +3,6 @@ package com.masternaut.factory;
 import com.masternaut.PaddingtonDatabase;
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
-import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.PersonRepository;
@@ -18,7 +17,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +26,9 @@ public class CustomerMongoFactory {
 
     @Autowired
     private MongoTemplate systemMongoTemplate;
+
+    @Autowired
+    private Mongo systemMongo;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -61,7 +62,7 @@ public class CustomerMongoFactory {
     public MongoOperations create(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
-        return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
+        return createMongoTemplate(customer.getDatabaseName(), customerId);
     }
 
     public void clearCustomerDatabase() {
@@ -92,18 +93,11 @@ public class CustomerMongoFactory {
         return annotation;
     }
 
-    private MongoOperations createMongoTemplate(MongoConnectionDetails domainMongoConnectionDetails, String customerId) {
-        if (domainMongoConnectionDetails == null) {
-            throw new PaddingtonException("Invalid domainMongoConnectionDetails on for customer id: " + customerId);
+    private MongoOperations createMongoTemplate(String customerDatabaseName, String customerId) {
+        if (customerDatabaseName == null || customerDatabaseName.equals("")) {
+            throw new PaddingtonException("null or empty customerDatabaseName on for customer id: " + customerId);
         }
 
-        Mongo mongo;
-        try {
-            mongo = new Mongo(domainMongoConnectionDetails.getHostname(), domainMongoConnectionDetails.getPort());
-        } catch (UnknownHostException e) {
-            throw new PaddingtonException(e);
-        }
-
-        return new MongoTemplate(mongo, domainMongoConnectionDetails.getDatabaseName());
+        return new MongoTemplate(systemMongo, customerDatabaseName);
     }
 }

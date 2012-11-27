@@ -37,13 +37,12 @@ public abstract class BaseCustomerRepositoryTest {
         customerMongoFactory.clearCustomerDatabase();
     }
 
-    private Customer createAndSaveTestCustomer(int customerId, CustomerRepository customerRepository, Object customerDatabaseName) {
+    private Customer createAndSaveTestCustomer(int customerId, CustomerRepository customerRepository, String customerDatabaseName) {
         Customer customer = new Customer();
         customer.setId(String.format("MyCustomerId%d", customerId));
         customer.setName(String.format("MyCustomerName%d", customerId));
 
-        MongoConnectionDetails connectionDetails = new MongoConnectionDetails(String.format("UnitTest_%s", customerDatabaseName));
-        customer.setDomainMongoConnectionDetails(connectionDetails);
+        customer.setDatabaseName(customerDatabaseName);
 
         customerRepository.save(customer);
 

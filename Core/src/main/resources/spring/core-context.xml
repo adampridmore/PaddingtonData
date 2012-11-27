@@ -34,10 +34,10 @@
     </bean>
 
     <!--<mongo:mongo replica-set="${mongo.system.mongoUri}"/>-->
-    <mongo:mongo host="${mongo.system.hostname}" port="${mongo.system.port}"/>
+    <mongo:mongo id="systemMongo" host="${mongo.system.hostname}" port="${mongo.system.port}"/>
 
     <bean id="systemMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg ref="mongo"/>
+        <constructor-arg ref="systemMongo"/>
         <constructor-arg value="${mongo.system.databaseName}"/>
     </bean>
 

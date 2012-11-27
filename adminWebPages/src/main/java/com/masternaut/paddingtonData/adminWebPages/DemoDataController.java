@@ -3,7 +3,6 @@ package com.masternaut.paddingtonData.adminWebPages;
 import com.masternaut.BulkInsertBatcher;
 import com.masternaut.domain.Asset;
 import com.masternaut.domain.Customer;
-import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.RouteResultRepository;
@@ -111,7 +110,7 @@ public class DemoDataController {
         customer.setName(String.format("CustomerName_%s", customerId));
 
         String databaseName = String.format("Test_System_%s", customerDatabaseName);
-        customer.setDomainMongoConnectionDetails(new MongoConnectionDetails(databaseName));
+        customer.setDatabaseName(databaseName);
 
         customerRepository.save(customer);
 
