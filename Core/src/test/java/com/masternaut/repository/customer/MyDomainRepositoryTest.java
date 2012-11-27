@@ -6,6 +6,8 @@ import com.masternaut.repository.domain.MyDomain;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.StopWatch;
 
@@ -20,12 +22,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
+    @Autowired
     private MyDomainRepository myDomainRepository;
 
     @Before
     public void before() {
-        myDomainRepository = repositoryFactory.createRepository(MyDomainRepository.class);
-
         myDomainRepository.deleteAllForCustomer(customer1.getId());
         myDomainRepository.deleteAllForCustomer(customer2.getId());
         myDomainRepository.deleteAllForCustomer(customer3.getId());
@@ -154,7 +155,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        Set<MongoTemplate> lotsOfCustomerConnections = myDomainRepository
+        Set<MongoOperations> lotsOfCustomerConnections = myDomainRepository
                 .createLotsOfCustomerConnections(customer1.getId(), 10000);
 
         stopWatch.stop();

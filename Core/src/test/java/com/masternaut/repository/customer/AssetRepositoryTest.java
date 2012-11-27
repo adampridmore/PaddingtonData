@@ -2,18 +2,14 @@ package com.masternaut.repository.customer;
 
 import com.masternaut.domain.Asset;
 import com.masternaut.repository.BaseCustomerRepositoryTest;
-import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 
 public class AssetRepositoryTest extends BaseCustomerRepositoryTest {
+    @Autowired
     private AssetRepository assetRepository;
-
-    @Before
-    public void before() {
-        assetRepository = repositoryFactory.createRepository(AssetRepository.class);
-    }
 
     @Test
     public void saveAndLoad() {

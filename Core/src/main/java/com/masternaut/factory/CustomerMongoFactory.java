@@ -14,6 +14,7 @@ import com.mongodb.ServerAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RepositoryFactory {
+public class CustomerMongoFactory {
 
     @Autowired
     private MongoTemplate systemMongoTemplate;
@@ -30,12 +31,17 @@ public class RepositoryFactory {
     @Autowired
     private ApplicationContext applicationContext;
 
-    public RepositoryFactory() {
-    }
+    @Autowired
+    private CustomerRepository customerRepository;
 
-    public <T> T createRepository(Class<T> clazz) {
-        return applicationContext.getBean(clazz);
-    }
+    @Autowired
+    private AssetRepository assetRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    @Autowired
+    private RouteResultRepository routeResultRepository;
 
     public List<String> getDatabaseConnectionInformation() {
         List<String> properties = new ArrayList<String>();
@@ -50,29 +56,31 @@ public class RepositoryFactory {
         return properties;
     }
 
-    @Cacheable(value = "customerMongoTemplate")
-    public MongoTemplate createMongoTemplateForCustomerId(String customerId) {
-        CustomerRepository customerRepository = createRepository(CustomerRepository.class);
-
+    @Cacheable(value = "customerMongoOperations")
+    public MongoOperations create(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
         return createMongoTemplate(customer.getDomainMongoConnectionDetails(), customerId);
     }
 
     public void clearCustomerDatabase() {
-        CustomerRepository customerRepository = createRepository(CustomerRepository.class);
         List<Customer> allCustomers = customerRepository.findAll();
-
-        List<BaseCustomerRepository> allCustomerRepositories = new ArrayList<BaseCustomerRepository>();
-        allCustomerRepositories.add(createRepository(AssetRepository.class));
-        allCustomerRepositories.add(createRepository(RouteResultRepository.class));
-        allCustomerRepositories.add(createRepository(PersonRepository.class));
+        List<BaseCustomerRepository> allCustomerRepositories = getAllCustomerSpecificRepositories();
 
         for (Customer customer : allCustomers) {
             for (BaseCustomerRepository baseCustomerRepository : allCustomerRepositories) {
                 baseCustomerRepository.deleteAllForCustomer(customer.getId());
             }
         }
+    }
+
+    private List<BaseCustomerRepository> getAllCustomerSpecificRepositories() {
+        // TODO - This should use reflection to get all customer repositories.
+        List<BaseCustomerRepository> allCustomerRepositories = new ArrayList<BaseCustomerRepository>();
+        allCustomerRepositories.add(personRepository);
+        allCustomerRepositories.add(assetRepository);
+        allCustomerRepositories.add(routeResultRepository);
+        return allCustomerRepositories;
     }
 
     private <T> PaddingtonDatabase getPaddingtonDatabaseAnnotation(Class<T> clazz) {
@@ -84,7 +92,7 @@ public class RepositoryFactory {
         return annotation;
     }
 
-    private MongoTemplate createMongoTemplate(MongoConnectionDetails domainMongoConnectionDetails, String customerId) {
+    private MongoOperations createMongoTemplate(MongoConnectionDetails domainMongoConnectionDetails, String customerId) {
         if (domainMongoConnectionDetails == null) {
             throw new PaddingtonException("Invalid domainMongoConnectionDetails on for customer id: " + customerId);
         }

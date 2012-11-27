@@ -3,7 +3,7 @@ package com.masternaut.factory;
 import com.masternaut.repository.BaseCustomerRepositoryTest;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.util.StopWatch;
 
 import static junit.framework.Assert.assertTrue;
@@ -11,8 +11,8 @@ import static junit.framework.Assert.assertTrue;
 public class RepositoryFactoryTest extends BaseCustomerRepositoryTest {
     @Test
     public void cachingTest() {
-        MongoTemplate a = repositoryFactory.createMongoTemplateForCustomerId(customer1.getId());
-        MongoTemplate b = repositoryFactory.createMongoTemplateForCustomerId(customer1.getId());
+        MongoOperations a = customerMongoFactory.create(customer1.getId());
+        MongoOperations b = customerMongoFactory.create(customer1.getId());
 
         assertTrue(a == b);
     }
@@ -24,7 +24,7 @@ public class RepositoryFactoryTest extends BaseCustomerRepositoryTest {
 
         int numberToCreate = 10000;
         for (int i = 0; i < numberToCreate; i++) {
-            MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customer1.getId());
+            MongoOperations mongoTemplate = customerMongoFactory.create(customer1.getId());
 
             mongoTemplate.toString();
         }

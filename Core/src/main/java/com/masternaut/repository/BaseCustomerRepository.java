@@ -4,10 +4,10 @@ import com.masternaut.CustomerIdentifiable;
 import com.masternaut.DomainHelper;
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
-import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -17,7 +17,10 @@ import java.util.List;
 public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
     @Autowired
-    protected RepositoryFactory repositoryFactory;
+    protected CustomerMongoFactory customerMongoFactory;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     private Class<T> clazz;
 
@@ -26,12 +29,12 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public void deleteAllForCustomer(String customerId) {
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+        MongoOperations mongoOperations = customerMongoFactory.create(customerId);
 
         Criteria criteria = createCriteriaForCustomer(customerId);
         Query query = Query.query(criteria);
 
-        mongoTemplate.remove(query, clazz);
+        mongoOperations.remove(query, clazz);
     }
 
     private Criteria createCriteriaForCustomer(String customerId) {
@@ -51,7 +54,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
         String customerId = DomainHelper.getCustomerIdFromList(tlist);
 
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+        MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
 
         mongoTemplate.insert(list, clazz);
     }
@@ -61,7 +64,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
             throw new PaddingtonException(String.format("CustomerId not set on %s", clazz.getSimpleName()));
         }
 
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(t.getCustomerId());
+        MongoOperations mongoTemplate = customerMongoFactory.create(t.getCustomerId());
 
         mongoTemplate.save(t);
     }
@@ -72,13 +75,13 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         }
 
         for(T t : tlist){
-            MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(t.getCustomerId());
+            MongoOperations mongoTemplate = customerMongoFactory.create(t.getCustomerId());
             mongoTemplate.save(t);
         }
     }
 
     public T findById(String id, String customerId) {
-        MongoTemplate customerMongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+        MongoOperations customerMongoTemplate = customerMongoFactory.create(customerId);
 
         T t = customerMongoTemplate.findById(id, clazz);
 
@@ -91,7 +94,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public List<T> findAllForCustomer(String customerId) {
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+        MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
 
         Criteria criteria = createCriteriaForCustomer(customerId);
 
@@ -107,13 +110,11 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public long countForAllCustomers() {
-        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
-
         List<Customer> allCustomers = customerRepository.findAll();
 
         int count = 0;
         for (Customer customer : allCustomers) {
-            MongoTemplate customerMongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customer.getId());
+            MongoOperations customerMongoTemplate = customerMongoFactory.create(customer.getId());
 
             Criteria criteria = createCriteriaForCustomer(customer.getId());
 
@@ -124,7 +125,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public long countForCustomerId(String customerId) {
-        MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+        MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
 
         Criteria criteria = createCriteriaForCustomer(customerId);
 

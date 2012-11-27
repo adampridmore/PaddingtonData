@@ -2,16 +2,12 @@ package com.masternaut.repository.customer;
 
 import com.masternaut.domain.Person;
 import com.masternaut.repository.BaseCustomerRepositoryTest;
-import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonRepositoryTest extends BaseCustomerRepositoryTest {
+    @Autowired
     private PersonRepository personRepository;
-
-    @Before
-    public void before() {
-        personRepository = repositoryFactory.createRepository(PersonRepository.class);
-    }
 
     @Test
     public void loadAndSave(){

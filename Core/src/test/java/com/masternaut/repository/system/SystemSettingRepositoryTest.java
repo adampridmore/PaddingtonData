@@ -5,17 +5,17 @@ import com.masternaut.domain.SystemSettings;
 import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.mongodb.util.MyAsserts.assertEquals;
 
 @PaddingtonDatabase(type = PaddingtonDatabase.DatabaseType.System)
 public class SystemSettingRepositoryTest extends BaseSystemRepositoryTest {
-
+    @Autowired
     private SystemSettingsRepository systemSettingsRepository;
 
     @Before
     public void before() {
-        systemSettingsRepository = repositoryFactory.createRepository(SystemSettingsRepository.class);
         systemSettingsRepository.deleteAll();
     }
 

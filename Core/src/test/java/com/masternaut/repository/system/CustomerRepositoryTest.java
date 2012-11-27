@@ -6,18 +6,18 @@ import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.BaseSystemRepositoryTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
-
+    @Autowired
     private CustomerRepository customerRepository;
 
     @Before
     public void before() {
-        customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
         customerRepository.deleteAll();
     }
 

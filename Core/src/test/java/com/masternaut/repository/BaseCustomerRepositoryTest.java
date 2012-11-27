@@ -2,7 +2,7 @@ package com.masternaut.repository;
 
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
-import com.masternaut.factory.RepositoryFactory;
+import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -15,7 +15,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public abstract class BaseCustomerRepositoryTest {
 
     @Autowired
-    protected RepositoryFactory repositoryFactory;
+    protected CustomerMongoFactory customerMongoFactory;
+
+    @Autowired
+    protected CustomerRepository customerRepository;
 
     protected Customer customer1;
     protected Customer customer2;
@@ -23,7 +26,6 @@ public abstract class BaseCustomerRepositoryTest {
 
     @Before
     public void baseBefore() {
-        CustomerRepository customerRepository = repositoryFactory.createRepository(CustomerRepository.class);
         customerRepository.deleteAll();
 
         String sharedCustomerDatabaseName = "SharedCustomerDatabase";
@@ -32,7 +34,7 @@ public abstract class BaseCustomerRepositoryTest {
         customer2 = createAndSaveTestCustomer(2, customerRepository, sharedCustomerDatabaseName);
         customer3 = createAndSaveTestCustomer(3, customerRepository, "SingleCustomerDatabase");
 
-        repositoryFactory.clearCustomerDatabase();
+        customerMongoFactory.clearCustomerDatabase();
     }
 
     private Customer createAndSaveTestCustomer(int customerId, CustomerRepository customerRepository, Object customerDatabaseName) {

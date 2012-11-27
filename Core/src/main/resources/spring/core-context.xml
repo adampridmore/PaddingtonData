@@ -41,7 +41,7 @@
         <constructor-arg value="${mongo.system.databaseName}"/>
     </bean>
 
-    <bean id="repositoryFactory" class="com.masternaut.factory.RepositoryFactory"/>
+    <bean id="customerMongoFactory" class="com.masternaut.factory.CustomerMongoFactory"/>
 
     <!-- Spring Caching -->
     <cache:annotation-driven />

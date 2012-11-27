@@ -3,7 +3,7 @@ package com.masternaut.repository.customer;
 import com.masternaut.PaddingtonDatabase;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.domain.MyDomain;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -16,11 +16,11 @@ public class MyDomainRepository extends BaseCustomerRepository<MyDomain> {
         super( MyDomain.class);
     }
 
-    public Set<MongoTemplate> createLotsOfCustomerConnections(String customerId, int numberToCreate) {
-        Set<MongoTemplate> set = new HashSet<MongoTemplate>();
+    public Set<MongoOperations> createLotsOfCustomerConnections(String customerId, int numberToCreate) {
+        Set<MongoOperations> set = new HashSet<MongoOperations>();
 
         for(int i = 0 ; i < numberToCreate ; i++){
-            MongoTemplate mongoTemplate = repositoryFactory.createMongoTemplateForCustomerId(customerId);
+            MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
 
             set.add(mongoTemplate);
         }
