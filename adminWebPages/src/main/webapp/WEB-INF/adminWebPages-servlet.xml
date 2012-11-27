@@ -34,7 +34,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <import resource="classpath:spring/spring-context.xml"/>
+    <import resource="classpath:spring/core-context.xml"/>
 
 
     <!--<bean id="propertyPlaceHolder" class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer" />-->

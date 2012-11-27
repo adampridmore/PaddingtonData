@@ -154,14 +154,16 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        Set<MongoTemplate> lotsOfCustomerConnections = myDomainRepository.createLotsOfCustomerConnections(customer1.getId(), 10);
+        Set<MongoTemplate> lotsOfCustomerConnections = myDomainRepository
+                .createLotsOfCustomerConnections(customer1.getId(), 10000);
 
         stopWatch.stop();
 
         System.out.println(String.format("Took %fs", stopWatch.getTotalTimeSeconds()));
 
-        assertEquals(1, lotsOfCustomerConnections.size());
         assertTrue(stopWatch.getTotalTimeSeconds() < 1);
+
+        assertEquals(1, lotsOfCustomerConnections.size());
     }
 
     @Test
