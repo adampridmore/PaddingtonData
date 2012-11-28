@@ -20,4 +20,11 @@ public class MyDomain extends CustomerIdentifiable {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "MyDomain{" +
+                "name='" + name + '\'' +
+                "} " + super.toString();
+    }
 }

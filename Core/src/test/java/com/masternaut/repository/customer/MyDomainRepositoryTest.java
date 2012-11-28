@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.StopWatch;
@@ -18,9 +20,7 @@ import java.util.Set;
 import static com.mongodb.util.ThreadUtil.sleep;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     @Autowired
@@ -215,7 +215,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     public void findByIds() {
         MyDomain domain1 = new MyDomain("a", customer1.getId());
         MyDomain domain2 = new MyDomain("b", customer1.getId());
-        MyDomain domain3 = new MyDomain("c", customer1.getId());
+        MyDomain domain3 = new MyDomain("c", customer2.getId());
 
         myDomainRepository.save(domain1, domain2, domain3);
 
@@ -224,5 +224,27 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         assertEquals(2, foundResults.size());
         assertEquals("a", foundResults.get(0).getName());
         assertEquals("b", foundResults.get(1).getName());
+    }
+
+    @Test
+    public void findAllForCustomer_with_paging(){
+        createLotsOfDomainEntities(10, customer1.getId());
+
+        PageRequest pageRequest = new PageRequest(2, 3);
+
+        Page<MyDomain> pagedResults = myDomainRepository.findAllForCustomer(customer1.getId(), pageRequest);
+
+        assertEquals(2, pagedResults.getNumber());
+        assertEquals(3, pagedResults.getContent().size());
+        assertEquals("6", pagedResults.getContent().get(0).getName());
+        assertEquals("7",pagedResults.getContent().get(1).getName());
+        assertEquals("8",pagedResults.getContent().get(2).getName());
+    }
+
+    private void createLotsOfDomainEntities(int numberToCreate, String customerId) {
+        for(int i = 0; i < numberToCreate ; i++){
+            MyDomain myDomain = new MyDomain(String.format("%d", i), customerId);
+            myDomainRepository.save(myDomain);
+        }
     }
 }

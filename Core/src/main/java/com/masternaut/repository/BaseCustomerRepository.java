@@ -7,9 +7,13 @@ import com.masternaut.domain.Customer;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.repository.query.QueryUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -120,18 +124,34 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
     public List<T> findAllForCustomer(String customerId) {
         MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
-
         Criteria criteria = createCriteriaForCustomer(customerId);
-
         Query query = Query.query(criteria);
 
         List<T> entities = mongoTemplate.find(query, clazz);
 
-        for (T t : entities) {
-            t.setCustomerId(customerId);
-        }
+        setCustomerIdOnList(customerId, entities);
 
         return entities;
+    }
+
+    public Page<T> findAllForCustomer(String customerId, PageRequest pageable) {
+        MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
+        Criteria criteria = createCriteriaForCustomer(customerId);
+        Query query = Query.query(criteria);
+
+        Long count = countForCustomerId(customerId);
+
+        List<T> list = mongoTemplate.find(QueryUtils.applyPagination(query, pageable), clazz);
+
+        setCustomerIdOnList(customerId, list);
+
+        return new PageImpl<T>(list, pageable, count);
+    }
+
+    private void setCustomerIdOnList(String customerId, Iterable<T> list) {
+        for (T t : list) {
+            t.setCustomerId(customerId);
+        }
     }
 
     public long countForAllCustomers() {
@@ -157,14 +177,25 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         return mongoTemplate.count(new Query(criteria), clazz);
     }
 
-    public List<T> findByIds(List<String> ids, String customerId) {
+    public List<T> findByIds(Iterable<String> ids, String customerId) {
         Criteria criteria = createCriteriaForCustomer(customerId);
 
-        criteria.and("id").in(ids);
+        List<String> idsList = iterableToList(ids);
+
+        criteria.and("id").in(idsList);
 
         MongoOperations mongoOperations = createMongoOperations(customerId);
 
         return mongoOperations.find(new Query(criteria), clazz);
     }
 
+    private <T> List<T> iterableToList(Iterable<T> tIterable) {
+        List<T> list = new ArrayList<T>();
+
+        for(T t : tIterable){
+            list.add(t);
+        }
+
+        return list;
+    }
 }

@@ -1,7 +1,5 @@
 package com.masternaut;
 
-import org.springframework.data.annotation.Transient;
-
 public abstract class CustomerIdentifiable extends Identifiable {
     private String customerId;
 
@@ -11,5 +9,12 @@ public abstract class CustomerIdentifiable extends Identifiable {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerIdentifiable{" +
+                "customerId='" + customerId + '\'' +
+                "} " + super.toString();
     }
 }
