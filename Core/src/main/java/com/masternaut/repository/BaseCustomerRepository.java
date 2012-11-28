@@ -99,9 +99,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public T findById(String id, String customerId) {
-        MongoOperations customerMongoTemplate = customerMongoFactory.create(customerId);
-
-        T t = customerMongoTemplate.findById(id, clazz);
+        T t = tryFindById(id, customerId);
 
         if (t == null) {
             String error = String.format("%s with id of '%s' not found.", clazz.getSimpleName(), id);
@@ -109,6 +107,15 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         }
 
         return t;
+    }
+
+    public T tryFindById(String id, String customerId) {
+        MongoOperations customerMongoOperations = customerMongoFactory.create(customerId);
+
+        Criteria criteria = createCriteriaForCustomer(customerId);
+        criteria.and("id").is(id);
+
+        return customerMongoOperations.findOne(new Query(criteria), clazz);
     }
 
     public List<T> findAllForCustomer(String customerId) {
@@ -159,4 +166,5 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
         return mongoOperations.find(new Query(criteria), clazz);
     }
+
 }

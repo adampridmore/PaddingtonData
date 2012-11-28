@@ -19,6 +19,7 @@ import static com.mongodb.util.ThreadUtil.sleep;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
@@ -123,6 +124,21 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
+    public void tryFindById_with_invalidId() {
+        MyDomain myDomain = myDomainRepository.tryFindById("InvalidId", customer1.getId());
+        assertNull(myDomain);
+    }
+
+    @Test
+    public void tryFindById() {
+        MyDomain myDomain = new MyDomain("A", customer1.getId());
+        myDomainRepository.save(myDomain);
+
+        MyDomain loadedMyDomain = myDomainRepository.tryFindById(myDomain.getId(), customer1.getId());
+        assertEquals(myDomain.getName(), loadedMyDomain.getName());
+    }
+
+    @Test
     public void countForCustomer() {
         MyDomain asset1 = new MyDomain();
         asset1.setCustomerId(customer1.getId());
@@ -151,7 +167,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
-    public void customer_MongoTemplate_are_cached_and_quick(){
+    public void customer_MongoTemplate_are_cached_and_quick() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -169,8 +185,8 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
     @Test
     @Ignore("slow")
-    public void default_cache_is_for_10_seconds(){
-        MongoTemplate  mongoTemplate1= (MongoTemplate) myDomainRepository.createLotsOfCustomerConnections(customer1.getId(), 1).toArray()[0];
+    public void default_cache_is_for_10_seconds() {
+        MongoTemplate mongoTemplate1 = (MongoTemplate) myDomainRepository.createLotsOfCustomerConnections(customer1.getId(), 1).toArray()[0];
 
         int elevenSeconds = 11000;
 
@@ -178,11 +194,11 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         MongoTemplate mongoTemplate2 = (MongoTemplate) myDomainRepository.createLotsOfCustomerConnections(customer1.getId(), 1).toArray()[0];
 
-        assertNotSame(mongoTemplate1,  mongoTemplate2);
+        assertNotSame(mongoTemplate1, mongoTemplate2);
     }
 
     @Test
-    public void deleteById(){
+    public void deleteById() {
         MyDomain domain1 = new MyDomain("a", customer1.getId());
         MyDomain domain2 = new MyDomain("b", customer1.getId());
 
@@ -196,14 +212,14 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
-    public void findByIds(){
+    public void findByIds() {
         MyDomain domain1 = new MyDomain("a", customer1.getId());
         MyDomain domain2 = new MyDomain("b", customer1.getId());
         MyDomain domain3 = new MyDomain("c", customer1.getId());
 
         myDomainRepository.save(domain1, domain2, domain3);
 
-        List<MyDomain> foundResults = myDomainRepository.findByIds(Arrays.asList(domain1.getId(),  domain2.getId()), customer1.getId());
+        List<MyDomain> foundResults = myDomainRepository.findByIds(Arrays.asList(domain1.getId(), domain2.getId()), customer1.getId());
 
         assertEquals(2, foundResults.size());
         assertEquals("a", foundResults.get(0).getName());
