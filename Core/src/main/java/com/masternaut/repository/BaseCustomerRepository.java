@@ -78,13 +78,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public void save(T t) {
-        if (t.getCustomerId() == null) {
-            throw new PaddingtonException(String.format("CustomerId not set on %s", clazz.getSimpleName()));
-        }
-
-        MongoOperations mongoTemplate = customerMongoFactory.create(t.getCustomerId());
-
-        mongoTemplate.save(t);
+        save(Arrays.asList(t));
     }
 
     public void save(T... tlist) {
@@ -94,6 +88,12 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     public void save(Iterable<T> tlist) {
         if (!tlist.iterator().hasNext()){
             return;
+        }
+
+        for(T t : tlist){
+            if (t.getCustomerId() == null){
+                throw new PaddingtonException(String.format("CustomerId not set on %s", clazz.getSimpleName()));
+            }
         }
 
         for(T t : tlist){

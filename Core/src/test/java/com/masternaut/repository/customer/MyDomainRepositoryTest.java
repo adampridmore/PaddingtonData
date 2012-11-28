@@ -35,10 +35,20 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
-    public void save_with_no_customerId() {
+    public void save_single_with_no_customerId() {
         MyDomain myDomain = new MyDomain();
         try {
             myDomainRepository.save(myDomain);
+            fail("Exception not thrown");
+        } catch (PaddingtonException pe) {
+            assertEquals("CustomerId not set on MyDomain", pe.getMessage());
+        }
+    }
+
+    @Test
+    public void save_list_with_no_customerId() {
+        try {
+            myDomainRepository.save(new MyDomain(), new MyDomain());
             fail("Exception not thrown");
         } catch (PaddingtonException pe) {
             assertEquals("CustomerId not set on MyDomain", pe.getMessage());
