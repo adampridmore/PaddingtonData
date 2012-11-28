@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static com.mongodb.util.ThreadUtil.sleep;
 import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.*;
 
@@ -239,6 +240,19 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         assertEquals("6", pagedResults.getContent().get(0).getName());
         assertEquals("7",pagedResults.getContent().get(1).getName());
         assertEquals("8",pagedResults.getContent().get(2).getName());
+    }
+
+    @Test
+    public void existsForCustomer_when_not_exists(){
+        assertFalse(myDomainRepository.exists("NotAValidId", customer1.getId()));
+    }
+
+    @Test
+    public void existsForCustomer_when_exists(){
+        MyDomain myDomain = new MyDomain("A", customer1.getId());
+        myDomainRepository.save(myDomain);
+
+        assertTrue(myDomainRepository.exists(myDomain.getId(), customer1.getId()));
     }
 
     private void createLotsOfDomainEntities(int numberToCreate, String customerId) {

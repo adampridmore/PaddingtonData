@@ -198,4 +198,10 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
         return list;
     }
+
+    public boolean exists(String id, String customerId) {
+        T t = tryFindById(id, customerId);
+
+        return t != null;
+    }
 }
