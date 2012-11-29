@@ -136,7 +136,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
     @Test
     public void tryFindById_with_invalidId() {
-        MyDomain myDomain = myDomainRepository.tryFindById("InvalidId", customer1.getId());
+        MyDomain myDomain = myDomainRepository.findOne("InvalidId", customer1.getId());
         assertNull(myDomain);
     }
 
@@ -145,7 +145,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         MyDomain myDomain = new MyDomain("A", customer1.getId());
         myDomainRepository.save(myDomain);
 
-        MyDomain loadedMyDomain = myDomainRepository.tryFindById(myDomain.getId(), customer1.getId());
+        MyDomain loadedMyDomain = myDomainRepository.findOne(myDomain.getId(), customer1.getId());
         assertEquals(myDomain.getName(), loadedMyDomain.getName());
     }
 
@@ -215,7 +215,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         myDomainRepository.save(domain1, domain2);
 
-        myDomainRepository.deleteById(domain1.getId(), customer1.getId());
+        myDomainRepository.delete(domain1.getId(), customer1.getId());
 
         List<MyDomain> allForCustomer = myDomainRepository.findAllForCustomer(customer1.getId());
         assertEquals(1, allForCustomer.size());

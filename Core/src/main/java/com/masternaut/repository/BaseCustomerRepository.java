@@ -46,7 +46,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         mongoOperations.remove(query, clazz);
     }
 
-    public void deleteById(String id, String customerId) {
+    public void delete(String id, String customerId) {
         MongoOperations mongoOperations = customerMongoFactory.create(customerId);
 
         Criteria criteria = createCriteriaForCustomer(customerId);
@@ -77,8 +77,12 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         mongoTemplate.insert(list, clazz);
     }
 
-    public void save(T t) {
+    // TODO - In paddington this returns the passed in object.
+    // not sure why!
+    public T save(T t) {
         save(Arrays.asList(t));
+
+        return t;
     }
 
     public void save(T... tlist) {
@@ -102,8 +106,9 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         }
     }
 
+
     public T findById(String id, String customerId) {
-        T t = tryFindById(id, customerId);
+        T t = findOne(id, customerId);
 
         if (t == null) {
             String error = String.format("%s with id of '%s' not found.", clazz.getSimpleName(), id);
@@ -113,7 +118,8 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         return t;
     }
 
-    public T tryFindById(String id, String customerId) {
+    // TODO - In paddington this is called findOne, but I prefer tryFindById
+    public T findOne(String id, String customerId) {
         MongoOperations customerMongoOperations = customerMongoFactory.create(customerId);
 
         Criteria criteria = createCriteriaForCustomer(customerId);
@@ -200,7 +206,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public boolean exists(String id, String customerId) {
-        T t = tryFindById(id, customerId);
+        T t = findOne(id, customerId);
 
         return t != null;
     }
