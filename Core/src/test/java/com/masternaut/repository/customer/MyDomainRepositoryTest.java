@@ -1,7 +1,7 @@
 package com.masternaut.repository.customer;
 
 import com.masternaut.PaddingtonException;
-import com.masternaut.repository.BaseCustomerRepositoryTest;
+import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import com.masternaut.repository.domain.MyDomain;
 import org.junit.Before;
 import org.junit.Ignore;

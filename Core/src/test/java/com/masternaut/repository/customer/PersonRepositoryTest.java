@@ -1,7 +1,7 @@
 package com.masternaut.repository.customer;
 
 import com.masternaut.domain.Person;
-import com.masternaut.repository.BaseCustomerRepositoryTest;
+import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

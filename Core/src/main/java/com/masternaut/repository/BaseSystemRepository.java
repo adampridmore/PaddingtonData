@@ -12,7 +12,11 @@ import java.util.List;
 
 public class BaseSystemRepository<T extends Identifiable> {
     @Autowired
-    protected MongoTemplate systemMongoTemplate;
+    private MongoTemplate systemMongoTemplate;
+
+    protected MongoTemplate getSystemMongoTemplate() {
+        return systemMongoTemplate;
+    }
 
     private Class<T> clazz;
 

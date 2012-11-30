@@ -1,4 +1,4 @@
-package com.masternaut.repository;
+package com.masternaut.unitTestHelpers;
 
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;

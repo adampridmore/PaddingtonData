@@ -2,7 +2,7 @@ package com.masternaut.repository.customer;
 
 import com.masternaut.domain.Point;
 import com.masternaut.domain.RouteResult;
-import com.masternaut.repository.BaseCustomerRepositoryTest;
+import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

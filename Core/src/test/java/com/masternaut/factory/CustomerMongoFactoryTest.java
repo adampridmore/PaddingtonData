@@ -1,6 +1,6 @@
 package com.masternaut.factory;
 
-import com.masternaut.repository.BaseCustomerRepositoryTest;
+import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;

@@ -33,7 +33,7 @@ public class CustomerRepository extends BaseSystemRepository<Customer>{
 
         Query query = new Query(criteria);
 
-        List<Customer> customers = systemMongoTemplate.find(query, Customer.class);
+        List<Customer> customers = getSystemMongoTemplate().find(query, Customer.class);
 
         if (customers.size() == 0){
             return null;

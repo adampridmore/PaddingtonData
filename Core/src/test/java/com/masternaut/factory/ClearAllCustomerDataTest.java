@@ -2,7 +2,7 @@ package com.masternaut.factory;
 
 import com.masternaut.domain.Asset;
 import com.masternaut.domain.RouteResult;
-import com.masternaut.repository.BaseCustomerRepositoryTest;
+import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.RouteResultRepository;
 import org.junit.Test;

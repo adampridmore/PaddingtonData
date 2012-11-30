@@ -24,6 +24,9 @@
 
     <!-- Repositories -->
     <context:component-scan base-package="com.masternaut.repository" />
+    <!--This is where the repositories are in paddington-->
+    <context:component-scan base-package="com.masternaut.platform.core.repositories.customer" />
+
 
     <bean id="propertyPlaceHolder" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="locations">
@@ -56,7 +59,7 @@
     </bean>
 
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/spring/ehcache.xml" />
+        <property name="configLocation" value="classpath:/spring/paddingtonDataEhcache.xml" />
     </bean>
 
 </beans>
