@@ -3,6 +3,8 @@ package com.masternaut.paddingtonData.adminWebPages;
 import com.masternaut.BulkInsertBatcher;
 import com.masternaut.domain.Asset;
 import com.masternaut.domain.Customer;
+import com.masternaut.domain.Point;
+import com.masternaut.domain.RouteResult;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.RouteResultRepository;
@@ -12,9 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("demoData")
@@ -59,7 +60,45 @@ public class DemoDataController {
 
     @RequestMapping({"simulateLoad"})
     public RedirectView simulateLoad(@RequestParam(value = "numberToCreate", defaultValue = "1000") int numberToCreate) {
-        throw new NotImplementedException();
+        List<Customer> allCustomers = customerRepository.findAll();
+        List<Asset> allAssets = new ArrayList<Asset>();
+        for(Customer customer : allCustomers){
+            allAssets.addAll(assetRepository.findAllForCustomer(customer.getId()));
+        }
+
+        RedirectView redirectView = new RedirectView("../customers");
+
+        if (allAssets.size() == 0){
+            return redirectView;
+        }
+
+        BulkInsertBatcher<RouteResult> bulkInsertBatcher = new BulkInsertBatcher<RouteResult>(routeResultRepository);
+
+        Random random = new Random();
+        for(int i = 0 ; i < numberToCreate ; i++){
+
+            Asset randomAsset = getRandomAsset(allAssets, random);
+
+            RouteResult routeResult = new RouteResult();
+            routeResult.setAssetId(randomAsset.getId());
+            routeResult.setCustomerId(randomAsset.getCustomerId());
+            routeResult.setEventDateTime(new Date());
+            routeResult.setAddress("My Address");
+            routeResult.setPoint(new Point(123,456));
+
+            bulkInsertBatcher.add(routeResult);
+        }
+
+        bulkInsertBatcher.flush();
+
+        return redirectView;
+    }
+
+    private Asset getRandomAsset(List<Asset> allAssets, Random random) {
+
+        int randomAssetIndex = random.nextInt(allAssets.size() - 1) + 1;
+
+        return allAssets.get(randomAssetIndex);
     }
 
     @RequestMapping({"clearAllData"})

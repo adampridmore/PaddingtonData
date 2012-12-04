@@ -4,6 +4,8 @@ import com.masternaut.repository.BaseCustomerRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BulkInsertBatcher<T extends CustomerIdentifiable>{
 
@@ -24,7 +26,16 @@ public class BulkInsertBatcher<T extends CustomerIdentifiable>{
     }
 
     public void flush(){
-        repository.bulkInsert(batch);
+        Map<String,List<T>> groupedByCustomerId = ListHelper.groupBy(batch, new ListHelper.Selector<T, String>() {
+            @Override
+            public String action(T t) {
+                return t.getCustomerId();
+            }
+        });
+
+        for(Map.Entry<String,List<T>> itemsForCustomer : groupedByCustomerId.entrySet()){
+            repository.bulkInsert(itemsForCustomer.getValue());
+        }
 
         batch = new ArrayList<T>();
     }

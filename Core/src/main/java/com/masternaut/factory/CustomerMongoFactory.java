@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,16 +69,16 @@ public class CustomerMongoFactory {
     }
 
     private Iterable<BaseCustomerRepository> getAllCustomerSpecificRepositories() {
-        Map<String,BaseCustomerRepository> beansOfType = applicationContext.getBeansOfType(BaseCustomerRepository.class);
+        Map<String, BaseCustomerRepository> beansOfType = applicationContext.getBeansOfType(BaseCustomerRepository.class);
 
         return beansOfType.values();
     }
 
     private MongoOperations createMongoTemplate(String customerDatabaseName) {
-        if (customerDatabaseName == null){
+        if (StringUtils.hasText(customerDatabaseName)) {
+            return new MongoTemplate(systemMongo, customerDatabaseName);
+        } else {
             return customersSharedMongoTemplate;
         }
-
-        return new MongoTemplate(systemMongo, customerDatabaseName);
     }
 }
