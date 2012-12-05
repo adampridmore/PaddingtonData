@@ -1,31 +1,36 @@
 package com.masternaut.domain;
 
+import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
+import com.mongodb.ServerAddress;
 import org.springframework.util.Assert;
 
-public class MongoConnectionDetails {
-    public static final String LOCALHOST = "localhost";
-    private String hostname;
-    private String databaseName;
-    private int port;
+import java.util.List;
 
+public class MongoConnectionDetails {
+    private String mongoUri;
+    private String databaseName;
+
+    // TODO - Remove these
+    public static final String LOCALHOST = "localhost";
     public static final int DEFAULT_PORT = 27017;
+
+    private static final String DEFAULT_LOCAL_MONGOURI = MongoURI.MONGODB_PREFIX +  "localhost:27017";
 
     @Override
     public String toString() {
         return "MongoConnectionDetails{" +
-                "hostname='" + hostname + '\'' +
+                "mongoUri='" + mongoUri + '\'' +
                 ", databaseName='" + databaseName + '\'' +
-                ", port=" + port +
                 '}';
     }
 
     public MongoConnectionDetails() {
     }
 
-    public MongoConnectionDetails(String hostname, String databaseName, int port) {
-        this.hostname = hostname;
+    public MongoConnectionDetails(String mongoUri, String databaseName) {
+        this.mongoUri = mongoUri;
         this.databaseName = databaseName;
-        this.port = port;
     }
 
     public static MongoConnectionDetails createDefaultLocalConnection(String databaseName) {
@@ -33,18 +38,30 @@ public class MongoConnectionDetails {
 
         MongoConnectionDetails connectionDetails = new MongoConnectionDetails();
         connectionDetails.databaseName = databaseName;
-        connectionDetails.hostname = LOCALHOST;
-        connectionDetails.port = DEFAULT_PORT;
+        connectionDetails.mongoUri=  DEFAULT_LOCAL_MONGOURI;
 
         return connectionDetails;
     }
 
-    public String getHostname() {
-        return hostname;
+    public static MongoConnectionDetails createFromMongo(Mongo mongo, String databaseName) {
+        List<ServerAddress> allAddress = mongo.getAllAddress();
+
+        StringBuilder mongoUriString = new StringBuilder();
+        mongoUriString.append(MongoURI.MONGODB_PREFIX);
+
+        for(ServerAddress serverAddress : allAddress){
+            mongoUriString.append(String.format("%s:%d", serverAddress.getHost(),serverAddress.getPort()));
+        }
+
+        return new MongoConnectionDetails(mongoUriString.toString(), databaseName);
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public String getMongoUri() {
+        return mongoUri;
+    }
+
+    public void setMongoUri(String mongoUri) {
+        this.mongoUri = mongoUri;
     }
 
     public String getDatabaseName() {
@@ -53,13 +70,5 @@ public class MongoConnectionDetails {
 
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 }

@@ -6,6 +6,7 @@ import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.system.CustomerRepository;
 import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
 import com.mongodb.ServerAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -81,26 +82,24 @@ public class CustomerMongoFactory {
             return customersSharedMongoTemplate;
         }
 
-        Mongo mongo = createMongo(connectionDetails.getHostname(),  connectionDetails.getPort());
+        Mongo mongo = createMongo(connectionDetails.getMongoUri());
 
         return new MongoTemplate(mongo, connectionDetails.getDatabaseName());
     }
 
-    private Mongo createMongo(String hostname, int port) {
+    private Mongo createMongo(String mongoUri) {
         // TODO - Cacheing / pooling?
+        // Or can/should we use the MongoDBFactory?
         try {
-
-            return new Mongo(hostname, port);
+            return new Mongo(new MongoURI(mongoUri));
         } catch (UnknownHostException e) {
             throw new PaddingtonException(e);
         }
     }
 
     public MongoConnectionDetails createDefaultConnectionForCustomer(String customerDatabaseName) {
-        ServerAddress address = customersSharedMongoTemplate.getDb().getMongo().getAddress();
-        String host = address.getHost();
-        int port = address.getPort();
+        Mongo mongo = customersSharedMongoTemplate.getDb().getMongo();
 
-        return new MongoConnectionDetails(host,  customerDatabaseName,  port);
+        return MongoConnectionDetails.createFromMongo(mongo, customerDatabaseName);
     }
 }
