@@ -1,5 +1,7 @@
 package com.masternaut.domain;
 
+import org.springframework.util.Assert;
+
 public class MongoConnectionDetails {
     public static final String LOCALHOST = "localhost";
     private String hostname;
@@ -8,14 +10,33 @@ public class MongoConnectionDetails {
 
     public static final int DEFAULT_PORT = 27017;
 
+    @Override
+    public String toString() {
+        return "MongoConnectionDetails{" +
+                "hostname='" + hostname + '\'' +
+                ", databaseName='" + databaseName + '\'' +
+                ", port=" + port +
+                '}';
+    }
+
     public MongoConnectionDetails() {
     }
 
-    public MongoConnectionDetails(String databaseName) {
+    public MongoConnectionDetails(String hostname, String databaseName, int port) {
+        this.hostname = hostname;
         this.databaseName = databaseName;
+        this.port = port;
+    }
 
-        this.hostname = LOCALHOST;
-        this.port = DEFAULT_PORT;
+    public static MongoConnectionDetails createDefaultLocalConnection(String databaseName) {
+        Assert.hasText(databaseName);
+
+        MongoConnectionDetails connectionDetails = new MongoConnectionDetails();
+        connectionDetails.databaseName = databaseName;
+        connectionDetails.hostname = LOCALHOST;
+        connectionDetails.port = DEFAULT_PORT;
+
+        return connectionDetails;
     }
 
     public String getHostname() {

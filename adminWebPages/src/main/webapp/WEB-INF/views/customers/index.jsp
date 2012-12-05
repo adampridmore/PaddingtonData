@@ -32,6 +32,7 @@
             <th>Name</th>
             <th>Asset Count</th>
             <th>RouteResult Count</th>
+            <th>Database</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -41,6 +42,7 @@
                 <td>${customer.name}</td>
                 <td>${customer.numberOfAssets}</td>
                 <td>${customer.numberOfRouteResults}</td>
+                <td>${customer.mongoConnectionDetails}</td>
                 <td>
                     <a href="customers/details/${customer.id}">view</a>
                     <a href="#edit/${customer.id}">edit</a>

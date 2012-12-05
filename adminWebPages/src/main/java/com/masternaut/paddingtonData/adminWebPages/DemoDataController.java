@@ -1,10 +1,7 @@
 package com.masternaut.paddingtonData.adminWebPages;
 
 import com.masternaut.BulkInsertBatcher;
-import com.masternaut.domain.Asset;
-import com.masternaut.domain.Customer;
-import com.masternaut.domain.Point;
-import com.masternaut.domain.RouteResult;
+import com.masternaut.domain.*;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.RouteResultRepository;
@@ -146,7 +143,11 @@ public class DemoDataController {
         Customer customer = new Customer();
         customer.setId(customerId);
         customer.setName(String.format("CustomerName_%s", customerId));
-        customer.setDatabaseName(customerDatabaseName);
+
+        if (customerDatabaseName != null){
+            MongoConnectionDetails customerConnection = customerMongoFactory.createDefaultConnectionForCustomer(customerDatabaseName);
+            customer.setMongoConnectionDetails(customerConnection);
+        }
 
         customerRepository.save(customer);
 

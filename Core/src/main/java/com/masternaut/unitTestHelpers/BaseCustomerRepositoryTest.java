@@ -40,7 +40,10 @@ public abstract class BaseCustomerRepositoryTest {
         customer.setId(String.format("MyCustomerId%d", customerId));
         customer.setName(String.format("MyCustomerName%d", customerId));
 
-        customer.setDatabaseName(customerDatabaseName);
+        if (customerDatabaseName != null) {
+            MongoConnectionDetails mongoConnectionDetails = MongoConnectionDetails.createDefaultLocalConnection(customerDatabaseName);
+            customer.setMongoConnectionDetails(mongoConnectionDetails);
+        }
 
         customerRepository.save(customer);
 

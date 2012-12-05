@@ -1,6 +1,8 @@
 package com.masternaut.factory;
 
+import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
+import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.system.CustomerRepository;
 import com.mongodb.Mongo;
@@ -11,8 +13,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class CustomerMongoFactory {
     public MongoOperations create(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
-        return createMongoTemplate(customer.getDatabaseName());
+        return createMongoTemplate(customer.getMongoConnectionDetails());
     }
 
     public void clearCustomerDatabase() {
@@ -74,11 +76,31 @@ public class CustomerMongoFactory {
         return beansOfType.values();
     }
 
-    private MongoOperations createMongoTemplate(String customerDatabaseName) {
-        if (StringUtils.hasText(customerDatabaseName)) {
-            return new MongoTemplate(systemMongo, customerDatabaseName);
-        } else {
+    private MongoOperations createMongoTemplate(MongoConnectionDetails connectionDetails) {
+        if (connectionDetails == null){
             return customersSharedMongoTemplate;
         }
+
+        Mongo mongo = createMongo(connectionDetails.getHostname(),  connectionDetails.getPort());
+
+        return new MongoTemplate(mongo, connectionDetails.getDatabaseName());
+    }
+
+    private Mongo createMongo(String hostname, int port) {
+        // TODO - Cacheing / pooling?
+        try {
+
+            return new Mongo(hostname, port);
+        } catch (UnknownHostException e) {
+            throw new PaddingtonException(e);
+        }
+    }
+
+    public MongoConnectionDetails createDefaultConnectionForCustomer(String customerDatabaseName) {
+        ServerAddress address = customersSharedMongoTemplate.getDb().getMongo().getAddress();
+        String host = address.getHost();
+        int port = address.getPort();
+
+        return new MongoConnectionDetails(host,  customerDatabaseName,  port);
     }
 }
