@@ -5,9 +5,7 @@ import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.system.CustomerRepository;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -90,11 +88,17 @@ public class CustomerMongoFactory {
     private Mongo createMongo(String mongoUri) {
         // TODO - Cacheing / pooling?
         // Or can/should we use the MongoDBFactory?
+
+        Mongo mongo;
+
         try {
-            return new Mongo(new MongoURI(mongoUri));
+            mongo = new Mongo(new MongoURI(mongoUri));
         } catch (UnknownHostException e) {
             throw new PaddingtonException(e);
         }
+
+        mongo.setWriteConcern(WriteConcern.SAFE);
+        return mongo;
     }
 
     public MongoConnectionDetails createDefaultConnectionForCustomer(String customerDatabaseName) {
