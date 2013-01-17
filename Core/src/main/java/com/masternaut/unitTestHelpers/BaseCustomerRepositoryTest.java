@@ -4,6 +4,7 @@ import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository;
+import com.mongodb.MongoURI;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,11 @@ public abstract class BaseCustomerRepositoryTest {
         customer.setName(String.format("MyCustomerName%d", customerId));
 
         if (customerDatabaseName != null) {
-            MongoConnectionDetails mongoConnectionDetails = MongoConnectionDetails.createDefaultLocalConnection(customerDatabaseName);
+            String defaultUnitTestPort = "27017";
+            String defaultCustomerMongoUri = MongoURI.MONGODB_PREFIX + "localhost:" + defaultUnitTestPort;
+
+            MongoConnectionDetails mongoConnectionDetails = new MongoConnectionDetails(defaultCustomerMongoUri, customerDatabaseName);
+
             customer.setMongoConnectionDetails(mongoConnectionDetails);
         }
 

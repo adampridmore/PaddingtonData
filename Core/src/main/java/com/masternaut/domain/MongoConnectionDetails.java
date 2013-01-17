@@ -11,10 +11,6 @@ public class MongoConnectionDetails {
     private String mongoUri;
     private String databaseName;
 
-    // TODO - Remove these
-    public static final String LOCALHOST = "localhost";
-    public static final int DEFAULT_PORT = 27017;
-
     private static final String DEFAULT_LOCAL_MONGOURI = MongoURI.MONGODB_PREFIX +  "localhost:27017";
 
     @Override

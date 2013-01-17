@@ -164,6 +164,8 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         List<Customer> allCustomers = customerRepository.findAll();
 
         int count = 0;
+
+        // TODO - this should really try each database, and not each customer.
         for (Customer customer : allCustomers) {
             MongoOperations customerMongoTemplate = customerMongoFactory.create(customer.getId());
 
