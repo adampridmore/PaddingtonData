@@ -83,8 +83,8 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         myDomainRepository.deleteAllForCustomer(customer1.getId());
 
-        List<MyDomain> assetsForCustomer1 = myDomainRepository.findAllForCustomer(customer1.getId());
-        List<MyDomain> assetsForCustomer2 = myDomainRepository.findAllForCustomer(customer2.getId());
+        List<MyDomain> assetsForCustomer1 = myDomainRepository.findByCustomerId(customer1.getId());
+        List<MyDomain> assetsForCustomer2 = myDomainRepository.findByCustomerId(customer2.getId());
 
         assertEquals(0, assetsForCustomer1.size());
         assertEquals(1, assetsForCustomer2.size());
@@ -103,7 +103,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         otherCustomerAsset.setCustomerId(customer2.getId());
         myDomainRepository.save(otherCustomerAsset);
 
-        List<MyDomain> foundAssets = myDomainRepository.findAllForCustomer(customer1.getId());
+        List<MyDomain> foundAssets = myDomainRepository.findByCustomerId(customer1.getId());
 
         assertEquals(1, foundAssets.size());
         assertEquals("MyCustomerAssetName", foundAssets.get(0).getName());
@@ -136,7 +136,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
     @Test
     public void tryFindById_with_invalidId() {
-        MyDomain myDomain = myDomainRepository.findOne("InvalidId", customer1.getId());
+        MyDomain myDomain = myDomainRepository.findOneByCustomerIdAndId(customer1.getId(), "InvalidId");
         assertNull(myDomain);
     }
 
@@ -145,7 +145,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         MyDomain myDomain = new MyDomain("A", customer1.getId());
         myDomainRepository.save(myDomain);
 
-        MyDomain loadedMyDomain = myDomainRepository.findOne(myDomain.getId(), customer1.getId());
+        MyDomain loadedMyDomain = myDomainRepository.findOneByCustomerIdAndId(customer1.getId(), myDomain.getId());
         assertEquals(myDomain.getName(), loadedMyDomain.getName());
     }
 
@@ -173,7 +173,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         myDomainRepository.bulkInsert(Arrays.asList(asset1, asset2));
 
-        List<MyDomain> allForCustomer = myDomainRepository.findAllForCustomer(customer1.getId());
+        List<MyDomain> allForCustomer = myDomainRepository.findByCustomerId(customer1.getId());
         assertEquals(2, allForCustomer.size());
     }
 
@@ -217,7 +217,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
 
         myDomainRepository.delete(domain1.getId(), customer1.getId());
 
-        List<MyDomain> allForCustomer = myDomainRepository.findAllForCustomer(customer1.getId());
+        List<MyDomain> allForCustomer = myDomainRepository.findByCustomerId(customer1.getId());
         assertEquals(1, allForCustomer.size());
         assertEquals("b", allForCustomer.get(0).getName());
     }
@@ -263,6 +263,17 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         myDomainRepository.save(myDomain);
 
         assertTrue(myDomainRepository.exists(myDomain.getId(), customer1.getId()));
+    }
+
+    @Test
+    public void deleteAllForAllCustomers(){
+        MyDomain d1 =  new MyDomain("A", customer1.getId());
+        MyDomain d2 = new MyDomain("B", customer2.getId());
+        myDomainRepository.save(d1, d2);
+
+        myDomainRepository.deleteAllForAllCustomers();
+
+        assertEquals(0, myDomainRepository.countForAllCustomers());
     }
 
     private void createLotsOfDomainEntities(int numberToCreate, String customerId) {

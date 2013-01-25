@@ -26,7 +26,7 @@ public class BulkInsertBatcherTest extends BaseCustomerRepositoryTest {
 
         bulkInsertBatcher.flush();
 
-        List<MyDomain> allForCustomer = myDomainRepository.findAllForCustomer(customer1.getId());
+        List<MyDomain> allForCustomer = myDomainRepository.findByCustomerId(customer1.getId());
 
         assertEquals(1, allForCustomer.size());
         assertEquals("MyName", allForCustomer.get(0).getName());
@@ -47,10 +47,10 @@ public class BulkInsertBatcherTest extends BaseCustomerRepositoryTest {
 
         bulkInsertBatcher.flush();
 
-        List<MyDomain> allForCustomer1 = myDomainRepository.findAllForCustomer(customer1.getId());
+        List<MyDomain> allForCustomer1 = myDomainRepository.findByCustomerId(customer1.getId());
         assertEquals(1, allForCustomer1.size());
 
-        List<MyDomain> allForCustomer2 = myDomainRepository.findAllForCustomer(customer2.getId());
+        List<MyDomain> allForCustomer2 = myDomainRepository.findByCustomerId(customer2.getId());
         assertEquals(1, allForCustomer2.size());
     }
 }

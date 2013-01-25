@@ -5,6 +5,6 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd
        ">
 
-    <import resource="core-context.xml"/>
+    <import resource="classpath:spring/core-context.xml"/>
 
 </beans>

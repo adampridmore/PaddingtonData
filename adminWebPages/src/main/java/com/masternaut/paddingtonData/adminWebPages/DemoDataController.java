@@ -60,7 +60,7 @@ public class DemoDataController {
         List<Customer> allCustomers = customerRepository.findAll();
         List<Asset> allAssets = new ArrayList<Asset>();
         for(Customer customer : allCustomers){
-            allAssets.addAll(assetRepository.findAllForCustomer(customer.getId()));
+            allAssets.addAll(assetRepository.findByCustomerId(customer.getId()));
         }
 
         RedirectView redirectView = new RedirectView("../customers");

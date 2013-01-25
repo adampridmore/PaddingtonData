@@ -35,7 +35,7 @@ public class CustomersController {
                           Map<String, Object> model) {
         Customer customer = customerRepository.findById(customerId);
 
-        List<Asset> assetsForCustomer = assetRepository.findAllForCustomer(customerId);
+        List<Asset> assetsForCustomer = assetRepository.findByCustomerId(customerId);
 
         model.put("customer", customer);
         model.put("assets", assetsForCustomer);

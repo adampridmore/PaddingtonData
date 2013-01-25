@@ -108,7 +108,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
 
 
     public T findById(String id, String customerId) {
-        T t = findOne(id, customerId);
+        T t = findOneByCustomerIdAndId(customerId, id);
 
         if (t == null) {
             String error = String.format("%s with id of '%s' not found.", clazz.getSimpleName(), id);
@@ -119,7 +119,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     // TODO - In paddington this is called findOne, but I prefer tryFindById
-    public T findOne(String id, String customerId) {
+    public T findOneByCustomerIdAndId(String customerId, String id) {
         MongoOperations customerMongoOperations = customerMongoFactory.create(customerId);
 
         Criteria criteria = createCriteriaForCustomer(customerId);
@@ -128,7 +128,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         return customerMongoOperations.findOne(new Query(criteria), clazz);
     }
 
-    public List<T> findAllForCustomer(String customerId) {
+    public List<T> findByCustomerId(String customerId) {
         MongoOperations mongoTemplate = customerMongoFactory.create(customerId);
         Criteria criteria = createCriteriaForCustomer(customerId);
         Query query = Query.query(criteria);
@@ -208,8 +208,19 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     }
 
     public boolean exists(String id, String customerId) {
-        T t = findOne(id, customerId);
+        T t = findOneByCustomerIdAndId(customerId, id);
 
         return t != null;
+    }
+
+    public void deleteAllForAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+
+        // TODO - this should really try each database, and not each customer.
+        for(Customer customer : customers){
+            MongoOperations mongoOperations = customerMongoFactory.create(customer.getId());
+
+            mongoOperations.remove(new Query(), clazz);
+        }
     }
 }
