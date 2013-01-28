@@ -2,8 +2,8 @@ package com.masternaut.repository.system;
 
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
-import com.masternaut.domain.PaddingtonMongoUriHelper;
 import com.masternaut.repository.BaseSystemRepositoryTest;
+import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import com.mongodb.MongoURI;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
     public void save_and_findById() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
-        customer.setMongoUri(PaddingtonMongoUriHelper.createDefaultLocalConnection("MyDatabaseName"));
+        customer.setMongoUri(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
 
         customerRepository.save(customer);
 
@@ -42,7 +42,7 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
     public void tryFindById_when_present() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
-        customer.setMongoUri(PaddingtonMongoUriHelper.createDefaultLocalConnection("MyDatabaseName"));
+        customer.setMongoUri(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
 
         customerRepository.save(customer);
 

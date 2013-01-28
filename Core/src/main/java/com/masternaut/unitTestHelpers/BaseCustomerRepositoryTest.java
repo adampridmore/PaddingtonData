@@ -1,7 +1,6 @@
 package com.masternaut.unitTestHelpers;
 
 import com.masternaut.domain.Customer;
-import com.masternaut.domain.PaddingtonMongoUriHelper;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository2;
 import com.mongodb.MongoURI;
@@ -55,7 +54,7 @@ public abstract class BaseCustomerRepositoryTest {
 
     private static final String DEFAULT_LOCAL_MONGOURI = MongoURI.MONGODB_PREFIX +  "localhost:27017";
 
-    private static String createDefaultLocalConnection(String databaseName) {
+    public static String createDefaultLocalConnection(String databaseName) {
         Assert.hasText(databaseName);
 
         return String.format("%s/%s", DEFAULT_LOCAL_MONGOURI, databaseName);
