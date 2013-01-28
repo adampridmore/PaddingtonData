@@ -3,21 +3,11 @@ package com.masternaut.domain;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 import com.mongodb.ServerAddress;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
 public final class PaddingtonMongoUriHelper {
     private PaddingtonMongoUriHelper(){
-
-    }
-
-    private static final String DEFAULT_LOCAL_MONGOURI = MongoURI.MONGODB_PREFIX +  "localhost:27017";
-
-    public static String createDefaultLocalConnection(String databaseName) {
-        Assert.hasText(databaseName);
-
-        return String.format("%s/%s", DEFAULT_LOCAL_MONGOURI, databaseName);
     }
 
     public static String createFromMongo(Mongo mongo, String databaseName) {
