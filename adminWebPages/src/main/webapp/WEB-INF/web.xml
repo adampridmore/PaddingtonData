@@ -1,50 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
 
-    <!-- ***************** -->
-    <!-- Replica Set Config-->
-    <!--<context-param>-->
-        <!--<param-name>mongo.system.mongoUri</param-name>-->
-        <!--<param-value>mongodb://localhost:40000,localhost:40001,localhost:40002</param-value>-->
-    <!--</context-param>-->
-    <!-- ***************** -->
-
-    <!-- ************ -->
-    <!-- Mongo S (shard) Config-->
     <context-param>
-        <param-name>mongo.system.hostname</param-name>
-        <param-value>localhost</param-value>
+        <param-name>mongo.system.systemMongoUri</param-name>
+        <param-value>mongodb://MNAB-DEV15L:30000,MNAB-DEV15L:30001,MNAB-DEV15L:30002/Test_System</param-value>
     </context-param>
 
     <context-param>
-        <param-name>mongo.system.port</param-name>
-        <param-value>27017</param-value>
-    </context-param>-->
-    <!-- ************ -->
-
-    <!-- ********************** -->
-    <!-- Single mongodb instance-->
-    <!--<context-param>-->
-        <!--<param-name>mongo.system.hostname</param-name>-->
-        <!--<param-value>localhost</param-value>-->
-    <!--</context-param>-->
-
-    <!--<context-param>-->
-        <!--<param-name>mongo.system.port</param-name>-->
-        <!--<param-value>27017</param-value>-->
-    <!--</context-param>-->
-    <!-- ********************** -->
-
-    <context-param>
-        <param-name>mongo.system.systemDatabaseName</param-name>
-        <param-value>Test_System</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>mongo.system.customersSharedDatabaseName</param-name>
-        <param-value>Test_System_CustomersShared</param-value>
+        <param-name>mongo.system.customersSharedMongoUri</param-name>
+        <param-value>mongodb://MNAB-DEV15L:30000,MNAB-DEV15L:30001,MNAB-DEV15L:30002/Test_System_CustomersShared</param-value>
     </context-param>
 
     <servlet>

@@ -28,9 +28,6 @@ public class CustomerMongoFactory {
     private MongoTemplate customersSharedMongoTemplate;
 
     @Autowired
-    private Mongo systemMongo;
-
-    @Autowired
     private ApplicationContext applicationContext;
 
     @Autowired
@@ -80,19 +77,22 @@ public class CustomerMongoFactory {
             return customersSharedMongoTemplate;
         }
 
-        Mongo mongo = createMongo(connectionDetails.getMongoUri());
+        MongoURI mongoURI = new MongoURI(connectionDetails.getMongoUri());
 
-        return new MongoTemplate(mongo, connectionDetails.getDatabaseName());
+
+        Mongo mongo = createMongo(mongoURI);
+
+        return new MongoTemplate(mongo, mongoURI.getDatabase());
     }
 
-    private Mongo createMongo(String mongoUri) {
+    private Mongo createMongo(MongoURI mongoUri) {
         // TODO - Cacheing / pooling?
         // Or can/should we use the MongoDBFactory?
 
         Mongo mongo;
 
         try {
-            mongo = new Mongo(new MongoURI(mongoUri));
+            mongo = new Mongo(mongoUri);
         } catch (UnknownHostException e) {
             throw new PaddingtonException(e);
         }

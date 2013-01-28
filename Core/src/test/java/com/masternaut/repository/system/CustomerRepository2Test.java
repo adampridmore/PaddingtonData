@@ -33,7 +33,7 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
 
         assertEquals(customer.getId(), loadedCustomer.getId());
         assertEquals("MyCustomerName", loadedCustomer.getName());
-        assertEquals("MyDatabaseName", loadedCustomer.getMongoConnectionDetails().getDatabaseName());
+        assertEquals("MyDatabaseName", loadedCustomer.getMongoConnectionDetails().createMongoUri().getDatabase());
     }
 
     @Test

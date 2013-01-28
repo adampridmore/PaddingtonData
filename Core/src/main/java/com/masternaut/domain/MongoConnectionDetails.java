@@ -9,32 +9,31 @@ import java.util.List;
 
 public class MongoConnectionDetails {
     private String mongoUri;
-    private String databaseName;
 
     private static final String DEFAULT_LOCAL_MONGOURI = MongoURI.MONGODB_PREFIX +  "localhost:27017";
 
     @Override
     public String toString() {
-        return "MongoConnectionDetails{" +
-                "mongoUri='" + mongoUri + '\'' +
-                ", databaseName='" + databaseName + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder();
+        sb.append("MongoConnectionDetails");
+        sb.append("{mongoUri='").append(mongoUri).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     public MongoConnectionDetails() {
     }
 
-    public MongoConnectionDetails(String mongoUri, String databaseName) {
+    public MongoConnectionDetails(String mongoUri) {
         this.mongoUri = mongoUri;
-        this.databaseName = databaseName;
     }
 
     public static MongoConnectionDetails createDefaultLocalConnection(String databaseName) {
         Assert.hasText(databaseName);
 
         MongoConnectionDetails connectionDetails = new MongoConnectionDetails();
-        connectionDetails.databaseName = databaseName;
-        connectionDetails.mongoUri=  DEFAULT_LOCAL_MONGOURI;
+        connectionDetails.mongoUri=  String.format("%s/%s", DEFAULT_LOCAL_MONGOURI, databaseName);
+
 
         return connectionDetails;
     }
@@ -46,10 +45,16 @@ public class MongoConnectionDetails {
         mongoUriString.append(MongoURI.MONGODB_PREFIX);
 
         for(ServerAddress serverAddress : allAddress){
-            mongoUriString.append(String.format("%s:%d", serverAddress.getHost(),serverAddress.getPort()));
+            mongoUriString.append(String.format("%s:%d,", serverAddress.getHost(),serverAddress.getPort()));
         }
 
-        return new MongoConnectionDetails(mongoUriString.toString(), databaseName);
+        if (allAddress.size() > 0){
+            mongoUriString.deleteCharAt(mongoUriString.length()-1);
+        }
+
+        mongoUriString.append(String.format("/%s", databaseName));
+
+        return new MongoConnectionDetails(mongoUriString.toString());
     }
 
     public String getMongoUri() {
@@ -60,11 +65,7 @@ public class MongoConnectionDetails {
         this.mongoUri = mongoUri;
     }
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
+    public MongoURI createMongoUri(){
+        return new MongoURI(mongoUri);
     }
 }

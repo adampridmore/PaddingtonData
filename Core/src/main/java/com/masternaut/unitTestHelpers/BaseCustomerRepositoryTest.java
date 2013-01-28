@@ -42,10 +42,8 @@ public abstract class BaseCustomerRepositoryTest {
         customer.setName(String.format("MyCustomerName%d", customerId));
 
         if (customerDatabaseName != null) {
-            String defaultUnitTestPort = "27017";
-            String defaultCustomerMongoUri = MongoURI.MONGODB_PREFIX + "localhost:" + defaultUnitTestPort;
-
-            MongoConnectionDetails mongoConnectionDetails = new MongoConnectionDetails(defaultCustomerMongoUri, customerDatabaseName);
+            MongoConnectionDetails mongoConnectionDetails = MongoConnectionDetails
+                    .createDefaultLocalConnection(customerDatabaseName);
 
             customer.setMongoConnectionDetails(mongoConnectionDetails);
         }

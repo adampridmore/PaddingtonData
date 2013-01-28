@@ -36,17 +36,15 @@
         </property>
     </bean>
 
-    <!--<mongo:mongo replica-set="${mongo.system.mongoUri}"/>-->
-    <mongo:mongo id="systemMongo" host="${mongo.system.hostname}" port="${mongo.system.port}"/>
+    <mongo:db-factory id="systemMongo" uri="${mongo.system.systemMongoUri}"/>
+    <mongo:db-factory id="customersSharedMongo" uri="${mongo.system.customersSharedMongoUri}"/>
 
     <bean id="systemMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="systemMongo"/>
-        <constructor-arg value="${mongo.system.systemDatabaseName}"/>
     </bean>
 
     <bean id="customersSharedMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg ref="systemMongo"/>
-        <constructor-arg value="${mongo.system.customersSharedDatabaseName}"/>
+        <constructor-arg ref="customersSharedMongo"/>
     </bean>
 
     <bean id="customerMongoFactory" class="com.masternaut.factory.CustomerMongoFactory"/>
