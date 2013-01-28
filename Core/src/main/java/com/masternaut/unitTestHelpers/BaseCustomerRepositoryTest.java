@@ -1,7 +1,7 @@
 package com.masternaut.unitTestHelpers;
 
 import com.masternaut.domain.Customer;
-import com.masternaut.domain.MongoConnectionDetails;
+import com.masternaut.domain.PaddingtonMongoUriHelper;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository2;
 import com.mongodb.MongoURI;
@@ -42,10 +42,10 @@ public abstract class BaseCustomerRepositoryTest {
         customer.setName(String.format("MyCustomerName%d", customerId));
 
         if (customerDatabaseName != null) {
-            MongoConnectionDetails mongoConnectionDetails = MongoConnectionDetails
+            String mongoUri = PaddingtonMongoUriHelper
                     .createDefaultLocalConnection(customerDatabaseName);
 
-            customer.setMongoConnectionDetails(mongoConnectionDetails);
+            customer.setMongoUri(mongoUri);
         }
 
         customerRepository.save(customer);

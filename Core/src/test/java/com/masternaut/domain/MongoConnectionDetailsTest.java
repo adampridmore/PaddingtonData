@@ -15,8 +15,8 @@ public class MongoConnectionDetailsTest {
         Mongo systemMongo = new Mongo(new MongoURI(systemMongoUri));
 
         String newDatabaseName = "MyNewDatabaseName";
-        MongoConnectionDetails clonedConnectionDetails = MongoConnectionDetails.createFromMongo(systemMongo, newDatabaseName);
+        String clonedMongoUri = PaddingtonMongoUriHelper.createFromMongo(systemMongo, newDatabaseName);
 
-        assertEquals(baseUri + "/" + newDatabaseName, clonedConnectionDetails.getMongoUri());
+        assertEquals(baseUri + "/" + newDatabaseName, clonedMongoUri);
     }
 }

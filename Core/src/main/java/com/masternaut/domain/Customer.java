@@ -5,7 +5,7 @@ import com.masternaut.Identifiable;
 public class Customer extends Identifiable {
     private String name;
 
-    private MongoConnectionDetails mongoConnectionDetails;
+    private String mongoUri;
 
     private long numberOfAssets;
     private long numberOfRouteResults;
@@ -18,12 +18,12 @@ public class Customer extends Identifiable {
         this.name = name;
     }
 
-    public MongoConnectionDetails getMongoConnectionDetails() {
-        return mongoConnectionDetails;
+    public String getMongoUri() {
+        return mongoUri;
     }
 
-    public void setMongoConnectionDetails(MongoConnectionDetails mongoConnectionDetails) {
-        this.mongoConnectionDetails = mongoConnectionDetails;
+    public void setMongoUri(String mongoUri) {
+        this.mongoUri = mongoUri;
     }
 
     public long getNumberOfAssets() {

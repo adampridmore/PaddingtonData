@@ -42,7 +42,7 @@
                 <td>${customer.name}</td>
                 <td>${customer.numberOfAssets}</td>
                 <td>${customer.numberOfRouteResults}</td>
-                <td>${customer.mongoConnectionDetails}</td>
+                <td>${customer.mongoUri}</td>
                 <td>
                     <a href="customers/details/${customer.id}">view</a>
                     <a href="#edit/${customer.id}">edit</a>

@@ -2,10 +2,13 @@ package com.masternaut.factory;
 
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
-import com.masternaut.domain.MongoConnectionDetails;
+import com.masternaut.domain.PaddingtonMongoUriHelper;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.system.CustomerRepository2;
-import com.mongodb.*;
+import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
+import com.mongodb.ServerAddress;
+import com.mongodb.WriteConcern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -50,7 +53,7 @@ public class CustomerMongoFactory {
     public MongoOperations create(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
-        return createMongoTemplate(customer.getMongoConnectionDetails());
+        return createMongoTemplate(customer.getMongoUri());
     }
 
     public void clearCustomerDatabase() {
@@ -72,13 +75,12 @@ public class CustomerMongoFactory {
         return beansOfType.values();
     }
 
-    private MongoOperations createMongoTemplate(MongoConnectionDetails connectionDetails) {
-        if (connectionDetails == null){
+    private MongoOperations createMongoTemplate(String mongoUri) {
+        if (mongoUri == null){
             return customersSharedMongoTemplate;
         }
 
-        MongoURI mongoURI = new MongoURI(connectionDetails.getMongoUri());
-
+        MongoURI mongoURI = new MongoURI(mongoUri);
 
         Mongo mongo = createMongo(mongoURI);
 
@@ -101,9 +103,9 @@ public class CustomerMongoFactory {
         return mongo;
     }
 
-    public MongoConnectionDetails createDefaultConnectionForCustomer(String customerDatabaseName) {
+    public String createDefaultConnectionForCustomer(String customerDatabaseName) {
         Mongo mongo = customersSharedMongoTemplate.getDb().getMongo();
 
-        return MongoConnectionDetails.createFromMongo(mongo, customerDatabaseName);
+        return PaddingtonMongoUriHelper.createFromMongo(mongo, customerDatabaseName);
     }
 }

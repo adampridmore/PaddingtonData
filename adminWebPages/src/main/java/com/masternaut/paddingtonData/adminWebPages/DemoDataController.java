@@ -145,8 +145,8 @@ public class DemoDataController {
         customer.setName(String.format("CustomerName_%s", customerId));
 
         if (customerDatabaseName != null){
-            MongoConnectionDetails customerConnection = customerMongoFactory.createDefaultConnectionForCustomer(customerDatabaseName);
-            customer.setMongoConnectionDetails(customerConnection);
+            String mongoUri = customerMongoFactory.createDefaultConnectionForCustomer(customerDatabaseName);
+            customer.setMongoUri(mongoUri);
         }
 
         customerRepository.save(customer);
