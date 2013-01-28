@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CustomerRepository extends BaseSystemRepository<Customer>{
-    public CustomerRepository() {
+public class CustomerRepository2 extends BaseSystemRepository<Customer>{
+    public CustomerRepository2() {
         super(Customer.class);
     }
 

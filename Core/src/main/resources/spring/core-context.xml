@@ -52,13 +52,13 @@
     <bean id="customerMongoFactory" class="com.masternaut.factory.CustomerMongoFactory"/>
 
     <!-- Spring Caching -->
-    <cache:annotation-driven />
+    <cache:annotation-driven cache-manager="paddingtonDataCacheManager"/>
 
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="ehcache" />
+    <bean id="paddingtonDataCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="paddingtonDataEhcache" />
     </bean>
 
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <bean id="paddingtonDataEhcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:/spring/paddingtonDataEhcache.xml" />
     </bean>
 

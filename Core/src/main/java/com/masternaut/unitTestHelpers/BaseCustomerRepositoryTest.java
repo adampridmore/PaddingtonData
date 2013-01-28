@@ -3,7 +3,7 @@ package com.masternaut.unitTestHelpers;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.factory.CustomerMongoFactory;
-import com.masternaut.repository.system.CustomerRepository;
+import com.masternaut.repository.system.CustomerRepository2;
 import com.mongodb.MongoURI;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public abstract class BaseCustomerRepositoryTest {
     protected CustomerMongoFactory customerMongoFactory;
 
     @Autowired
-    protected CustomerRepository customerRepository;
+    protected CustomerRepository2 customerRepository;
 
     protected Customer customer1;
     protected Customer customer2;
@@ -36,7 +36,7 @@ public abstract class BaseCustomerRepositoryTest {
         customerMongoFactory.clearCustomerDatabase();
     }
 
-    private Customer createAndSaveTestCustomer(int customerId, CustomerRepository customerRepository, String customerDatabaseName) {
+    private Customer createAndSaveTestCustomer(int customerId, CustomerRepository2 customerRepository, String customerDatabaseName) {
         Customer customer = new Customer();
         customer.setId(String.format("MyCustomerId%d", customerId));
         customer.setName(String.format("MyCustomerName%d", customerId));

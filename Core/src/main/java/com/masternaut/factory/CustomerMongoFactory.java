@@ -4,7 +4,7 @@ import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoConnectionDetails;
 import com.masternaut.repository.BaseCustomerRepository;
-import com.masternaut.repository.system.CustomerRepository;
+import com.masternaut.repository.system.CustomerRepository2;
 import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,7 +34,7 @@ public class CustomerMongoFactory {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerRepository2 customerRepository;
 
     public List<String> getDatabaseConnectionInformation() {
         List<String> properties = new ArrayList<String>();

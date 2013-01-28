@@ -3,7 +3,7 @@ package com.masternaut.paddingtonData.adminWebPages;
 import com.masternaut.domain.Asset;
 import com.masternaut.domain.Customer;
 import com.masternaut.repository.customer.AssetRepository;
-import com.masternaut.repository.system.CustomerRepository;
+import com.masternaut.repository.system.CustomerRepository2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("customers")
 public class CustomersController {
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerRepository2 customerRepository;
 
     @Autowired
     private AssetRepository assetRepository;

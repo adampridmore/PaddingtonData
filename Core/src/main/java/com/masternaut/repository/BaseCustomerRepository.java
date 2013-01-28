@@ -5,7 +5,7 @@ import com.masternaut.DomainHelper;
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.factory.CustomerMongoFactory;
-import com.masternaut.repository.system.CustomerRepository;
+import com.masternaut.repository.system.CustomerRepository2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,7 +25,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
     private CustomerMongoFactory customerMongoFactory;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerRepository2 customerRepository;
 
     protected Class<T> clazz;
 
@@ -118,7 +118,7 @@ public class BaseCustomerRepository<T extends CustomerIdentifiable> {
         return t;
     }
 
-    // TODO - In paddington this is called findOne, but I prefer tryFindById
+    // TODO - In paddington this is called findOneByCustomerIdAndId, but I prefer tryFindById
     public T findOneByCustomerIdAndId(String customerId, String id) {
         MongoOperations customerMongoOperations = customerMongoFactory.create(customerId);
 

@@ -5,7 +5,7 @@ import com.masternaut.domain.*;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.customer.AssetRepository;
 import com.masternaut.repository.customer.RouteResultRepository;
-import com.masternaut.repository.system.CustomerRepository;
+import com.masternaut.repository.system.CustomerRepository2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class DemoDataController {
     private CustomerMongoFactory customerMongoFactory;
 
     @Autowired
-    private CustomerRepository customerRepository ;
+    private CustomerRepository2 customerRepository ;
 
     @Autowired
     private AssetRepository assetRepository ;

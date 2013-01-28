@@ -12,9 +12,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class CustomerRepositoryTest extends BaseSystemRepositoryTest{
+public class CustomerRepository2Test extends BaseSystemRepositoryTest{
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerRepository2 customerRepository;
 
     @Before
     public void before() {
