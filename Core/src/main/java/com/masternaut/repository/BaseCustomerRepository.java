@@ -1,6 +1,6 @@
 package com.masternaut.repository;
 
-import com.masternaut.CustomerIdentifiable;
+import com.masternaut.CustomerIdentifiedV2;
 import com.masternaut.DomainHelper;
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BaseCustomerRepository<T extends CustomerIdentifiable> {
+public class BaseCustomerRepository<T extends CustomerIdentifiedV2> {
 
     @Autowired
     private CustomerMongoFactory customerMongoFactory;

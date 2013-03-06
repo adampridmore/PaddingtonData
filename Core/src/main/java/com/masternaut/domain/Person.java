@@ -1,8 +1,8 @@
 package com.masternaut.domain;
 
-import com.masternaut.CustomerIdentifiable;
+import com.masternaut.CustomerIdentifiedV2;
 
-public class Person extends CustomerIdentifiable{
+public class Person extends CustomerIdentifiedV2 {
     private String name;
 
     public String getName() {

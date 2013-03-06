@@ -5,12 +5,12 @@
          version="2.5">
 
     <context-param>
-        <param-name>mongo.system.systemMongoUri</param-name>
+        <param-name>mongo_system_systemMongoUri</param-name>
         <param-value>mongodb://MNAB-DEV15L:30000,MNAB-DEV15L:30001,MNAB-DEV15L:30002/Test_System</param-value>
     </context-param>
 
     <context-param>
-        <param-name>mongo.system.customersSharedMongoUri</param-name>
+        <param-name>mongo_system_customersSharedMongoUri</param-name>
         <param-value>mongodb://MNAB-DEV15L:30000,MNAB-DEV15L:30001,MNAB-DEV15L:30002/Test_System_CustomersShared</param-value>
     </context-param>
 

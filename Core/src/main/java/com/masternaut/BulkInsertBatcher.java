@@ -5,9 +5,8 @@ import com.masternaut.repository.BaseCustomerRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class BulkInsertBatcher<T extends CustomerIdentifiable>{
+public class BulkInsertBatcher<T extends CustomerIdentifiedV2>{
 
     private List<T> batch = new ArrayList<T>();
     private int batchSize = 1000;

@@ -1,6 +1,6 @@
 package com.masternaut;
 
-public abstract class CustomerIdentifiable extends Identifiable {
+public abstract class CustomerIdentifiedV2 extends Identifiable {
     private String customerId;
 
     public String getCustomerId() {
@@ -13,7 +13,7 @@ public abstract class CustomerIdentifiable extends Identifiable {
 
     @Override
     public String toString() {
-        return "CustomerIdentifiable{" +
+        return "CustomerIdentifiedV2{" +
                 "customerId='" + customerId + '\'' +
                 "} " + super.toString();
     }

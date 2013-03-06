@@ -1,8 +1,8 @@
 package com.masternaut.repository.domain;
 
-import com.masternaut.CustomerIdentifiable;
+import com.masternaut.CustomerIdentifiedV2;
 
-public class MyDomain extends CustomerIdentifiable {
+public class MyDomain extends CustomerIdentifiedV2 {
     private String name;
 
     public MyDomain(String name, String customerId) {

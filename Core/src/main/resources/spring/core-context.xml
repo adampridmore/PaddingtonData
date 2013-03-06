@@ -36,8 +36,8 @@
         </property>
     </bean>
 
-    <mongo:db-factory id="systemMongo" uri="${mongo.system.systemMongoUri}"/>
-    <mongo:db-factory id="customersSharedMongo" uri="${mongo.system.customersSharedMongoUri}"/>
+    <mongo:db-factory id="systemMongo" uri="${system_settings_mongouri}"/>
+    <mongo:db-factory id="customersSharedMongo" uri="${mongo_system_customersSharedMongoUri}"/>
 
     <bean id="systemMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg ref="systemMongo"/>

@@ -1,7 +1,7 @@
 package com.masternaut;
 
 public class DomainHelper {
-    public static <T extends CustomerIdentifiable> String getCustomerIdFromList(Iterable<T> tlist) {
+    public static <T extends CustomerIdentifiedV2> String getCustomerIdFromList(Iterable<T> tlist) {
         if (!tlist.iterator().hasNext()) {
             throw new PaddingtonException("No items in list.");
         }

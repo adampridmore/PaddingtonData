@@ -1,10 +1,10 @@
 package com.masternaut.domain;
 
-import com.masternaut.CustomerIdentifiable;
+import com.masternaut.CustomerIdentifiedV2;
 
 import java.util.Date;
 
-public class RouteResult extends CustomerIdentifiable{
+public class RouteResult extends CustomerIdentifiedV2 {
     private String assetId;
     private String address;
     private Point point;

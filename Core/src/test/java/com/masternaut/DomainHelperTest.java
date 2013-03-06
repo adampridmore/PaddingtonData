@@ -13,7 +13,7 @@ public class DomainHelperTest {
     @Test
     public void getCustomerIdFromList_for_emptyList() {
         try {
-            DomainHelper.getCustomerIdFromList(new ArrayList<CustomerIdentifiable>());
+            DomainHelper.getCustomerIdFromList(new ArrayList<CustomerIdentifiedV2>());
             fail("Exception not thrown");
         } catch (PaddingtonException pe) {
             assertEquals("No items in list.", pe.getMessage());
