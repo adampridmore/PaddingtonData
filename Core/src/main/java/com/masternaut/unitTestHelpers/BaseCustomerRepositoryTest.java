@@ -31,7 +31,7 @@ public abstract class BaseCustomerRepositoryTest {
 
         customer1 = createAndSaveTestCustomer(1, customerRepository, null);
         customer2 = createAndSaveTestCustomer(2, customerRepository, null);
-        customer3 = createAndSaveTestCustomer(3, customerRepository, "UnitTest_Customer_3");
+        customer3 = createAndSaveTestCustomer(3, customerRepository, "unittest_Customer_3");
 
         customerMongoFactory.clearCustomerDatabase();
     }
