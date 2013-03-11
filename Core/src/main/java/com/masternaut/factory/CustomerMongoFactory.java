@@ -2,6 +2,7 @@ package com.masternaut.factory;
 
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
+import com.masternaut.domain.MongoDatabaseConnectionDetails;
 import com.masternaut.domain.PaddingtonMongoUriHelper;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.system.CustomerRepository2;
@@ -53,7 +54,7 @@ public class CustomerMongoFactory {
     public MongoOperations create(String customerId) {
         Customer customer = customerRepository.findById(customerId);
 
-        return createMongoTemplate(customer.getMongoUri());
+        return createMongoTemplate(customer.getMongoDatabaseConnectionDetails());
     }
 
     public void clearCustomerDatabase() {
@@ -75,12 +76,12 @@ public class CustomerMongoFactory {
         return beansOfType.values();
     }
 
-    private MongoOperations createMongoTemplate(String mongoUri) {
-        if (mongoUri == null){
+    private MongoOperations createMongoTemplate(MongoDatabaseConnectionDetails connectionDetails) {
+        if (connectionDetails == null || connectionDetails.getMongoUri() == null) {
             return customersSharedMongoTemplate;
         }
 
-        MongoURI mongoURI = new MongoURI(mongoUri);
+        MongoURI mongoURI = new MongoURI(connectionDetails.getMongoUri());
 
         Mongo mongo = createMongo(mongoURI);
 

@@ -2,6 +2,7 @@ package com.masternaut.repository.system;
 
 import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
+import com.masternaut.domain.MongoDatabaseConnectionDetails;
 import com.masternaut.repository.BaseSystemRepositoryTest;
 import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import com.mongodb.MongoURI;
@@ -26,7 +27,9 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
     public void save_and_findById() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
-        customer.setMongoUri(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
+
+        MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
+        customer.setMongoDatabaseConnectionDetails(connectionDetails);
 
         customerRepository.save(customer);
 
@@ -35,14 +38,16 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
         assertEquals(customer.getId(), loadedCustomer.getId());
         assertEquals("MyCustomerName", loadedCustomer.getName());
 
-        assertEquals("MyDatabaseName", new MongoURI(loadedCustomer.getMongoUri()).getDatabase());
+        assertEquals("MyDatabaseName", new MongoURI(loadedCustomer.getMongoDatabaseConnectionDetails().getMongoUri()).getDatabase());
     }
 
     @Test
     public void tryFindById_when_present() {
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
-        customer.setMongoUri(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
+
+        MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
+        customer.setMongoDatabaseConnectionDetails(connectionDetails);
 
         customerRepository.save(customer);
 

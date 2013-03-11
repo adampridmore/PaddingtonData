@@ -1,6 +1,7 @@
 package com.masternaut.unitTestHelpers;
 
 import com.masternaut.domain.Customer;
+import com.masternaut.domain.MongoDatabaseConnectionDetails;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository2;
 import com.mongodb.MongoURI;
@@ -44,7 +45,8 @@ public abstract class BaseCustomerRepositoryTest {
         if (customerDatabaseName != null) {
             String mongoUri = createDefaultLocalConnection(customerDatabaseName);
 
-            customer.setMongoUri(mongoUri);
+            MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(mongoUri);
+            customer.setMongoDatabaseConnectionDetails(connectionDetails);
         }
 
         customerRepository.save(customer);
