@@ -6,6 +6,7 @@ import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.factory.CustomerMongoFactory;
 import com.masternaut.repository.system.CustomerRepository2;
+import com.mongodb.DB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,6 +32,10 @@ public class BaseCustomerRepository<T extends CustomerIdentifiedV2> {
 
     public BaseCustomerRepository(Class<T> clazz) {
         this.clazz = clazz;
+    }
+
+    protected DB createMongoDB(String customerId) {
+        return customerMongoFactory.createMongoDB(customerId);
     }
 
     protected MongoOperations createMongoOperations(String customerId){

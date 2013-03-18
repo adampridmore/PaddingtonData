@@ -22,6 +22,27 @@
     <li>
         <a href="demoData/simulateLoad?numberToCreate=100000">Create 100,000 random routes</a>
     </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-01">Create 100,000 random routes for date 2012-01-01</a>
+    </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-02">Create 100,000 random routes for date 2012-01-02</a>
+    </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-03">Create 100,000 random routes for date 2012-01-03</a>
+    </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-04">Create 100,000 random routes for date 2012-01-04</a>
+    </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-05">Create 100,000 random routes for date 2012-01-05</a>
+    </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-06">Create 100,000 random routes for date 2012-01-06</a>
+    </li>
+    <li>
+        <a href="demoData/simulateLoad?numberToCreate=100000&date=2012-01-07">Create 100,000 random routes for date 2012-01-07</a>
+    </li>
 </ul>
 
 <h1>Customers<h1>
@@ -42,7 +63,7 @@
                 <td>${customer.name}</td>
                 <td>${customer.numberOfAssets}</td>
                 <td>${customer.numberOfRouteResults}</td>
-                <td>${customer.mongoUri}</td>
+                <td>TBD</td>
                 <td>
                     <a href="customers/details/${customer.id}">view</a>
                     <a href="#edit/${customer.id}">edit</a>

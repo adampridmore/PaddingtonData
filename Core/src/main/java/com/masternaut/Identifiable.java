@@ -1,6 +1,9 @@
 package com.masternaut;
 
+import org.springframework.data.annotation.Id;
+
 public abstract class Identifiable {
+    @Id
     private String id;
 
     public String getId() {

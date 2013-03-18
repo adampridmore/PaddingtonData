@@ -238,7 +238,7 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
-    public void findAllForCustomer_with_paging(){
+    public void findAllForCustomer_with_paging() {
         createLotsOfDomainEntities(10, customer1.getId());
 
         PageRequest pageRequest = new PageRequest(2, 3);
@@ -248,17 +248,17 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         assertEquals(2, pagedResults.getNumber());
         assertEquals(3, pagedResults.getContent().size());
         assertEquals("6", pagedResults.getContent().get(0).getName());
-        assertEquals("7",pagedResults.getContent().get(1).getName());
-        assertEquals("8",pagedResults.getContent().get(2).getName());
+        assertEquals("7", pagedResults.getContent().get(1).getName());
+        assertEquals("8", pagedResults.getContent().get(2).getName());
     }
 
     @Test
-    public void existsForCustomer_when_not_exists(){
+    public void existsForCustomer_when_not_exists() {
         assertFalse(myDomainRepository.exists("NotAValidId", customer1.getId()));
     }
 
     @Test
-    public void existsForCustomer_when_exists(){
+    public void existsForCustomer_when_exists() {
         MyDomain myDomain = new MyDomain("A", customer1.getId());
         myDomainRepository.save(myDomain);
 
@@ -266,8 +266,8 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
     }
 
     @Test
-    public void deleteAllForAllCustomers(){
-        MyDomain d1 =  new MyDomain("A", customer1.getId());
+    public void deleteAllForAllCustomers() {
+        MyDomain d1 = new MyDomain("A", customer1.getId());
         MyDomain d2 = new MyDomain("B", customer2.getId());
         myDomainRepository.save(d1, d2);
 
@@ -276,8 +276,29 @@ public class MyDomainRepositoryTest extends BaseCustomerRepositoryTest {
         assertEquals(0, myDomainRepository.countForAllCustomers());
     }
 
+    @Test
+    public void evalJavascript() {
+        MyDomain d1 = new MyDomain("A", customer1.getId());
+        myDomainRepository.save(d1);
+
+//        String javascript = "function() {\n" +
+//                "            var doc = db.myDomain.findOne();\n" +
+//                "            doc.name = 'cheese';\n" +
+//                "            db.myDomain.save(doc);\n" +
+//                "         }";
+
+        String javascript = "var doc = db.myDomain.findOne();\n" +
+                "            doc.name = 'cheese';\n" +
+                "            db.myDomain.save(doc);\n";
+
+        myDomainRepository.eval(customer1.getId(), javascript);
+
+        MyDomain loadedDomain = myDomainRepository.findOneByCustomerIdAndId(customer1.getId(), d1.getId());
+        assertEquals("cheese", loadedDomain.getName());
+    }
+
     private void createLotsOfDomainEntities(int numberToCreate, String customerId) {
-        for(int i = 0; i < numberToCreate ; i++){
+        for (int i = 0; i < numberToCreate; i++) {
             MyDomain myDomain = new MyDomain(String.format("%d", i), customerId);
             myDomainRepository.save(myDomain);
         }

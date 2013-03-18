@@ -6,16 +6,16 @@ import com.masternaut.domain.MongoDatabaseConnectionDetails;
 import com.masternaut.domain.PaddingtonMongoUriHelper;
 import com.masternaut.repository.BaseCustomerRepository;
 import com.masternaut.repository.system.CustomerRepository2;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
-import com.mongodb.ServerAddress;
-import com.mongodb.WriteConcern;
+import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -29,6 +29,9 @@ public class CustomerMongoFactory {
     private MongoTemplate systemMongoTemplate;
 
     @Autowired
+    private MongoDbFactory systemMongo;
+
+    @Autowired
     private MongoTemplate customersSharedMongoTemplate;
 
     @Autowired
@@ -36,6 +39,9 @@ public class CustomerMongoFactory {
 
     @Autowired
     private CustomerRepository2 customerRepository;
+
+    @Value("${mongo_system_customersSharedMongoUri}")
+    private String customersSharedMongoUri;
 
     public List<String> getDatabaseConnectionInformation() {
         List<String> properties = new ArrayList<String>();
@@ -55,6 +61,18 @@ public class CustomerMongoFactory {
         Customer customer = customerRepository.findById(customerId);
 
         return createMongoTemplate(customer.getMongoDatabaseConnectionDetails());
+    }
+
+    public DB createMongoDB(String customerId){
+        Customer customer = customerRepository.findById(customerId);
+
+        if (customer.getMongoDatabaseConnectionDetails() != null){
+            throw new NotImplementedException();
+        }
+
+        MongoURI mongoURI = new MongoURI(customersSharedMongoUri);
+
+        return systemMongo.getDb(mongoURI.getDatabase());
     }
 
     public void clearCustomerDatabase() {

@@ -1,6 +1,7 @@
 package com.masternaut;
 
 public abstract class CustomerIdentifiedV2 extends Identifiable {
+    //@Field("CID")
     private String customerId;
 
     public String getCustomerId() {
