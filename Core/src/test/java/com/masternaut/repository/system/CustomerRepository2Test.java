@@ -4,7 +4,6 @@ import com.masternaut.PaddingtonException;
 import com.masternaut.domain.Customer;
 import com.masternaut.domain.MongoDatabaseConnectionDetails;
 import com.masternaut.repository.BaseSystemRepositoryTest;
-import com.masternaut.unitTestHelpers.BaseCustomerRepositoryTest;
 import com.mongodb.MongoURI;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,9 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
 
-        MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
+        MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(
+                localConnectionUriHelperFactory.createDefaultLocalConnection("MyDatabaseName"));
+
         customer.setMongoDatabaseConnectionDetails(connectionDetails);
 
         customerRepository.save(customer);
@@ -46,7 +47,9 @@ public class CustomerRepository2Test extends BaseSystemRepositoryTest{
         Customer customer = new Customer();
         customer.setName("MyCustomerName");
 
-        MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(BaseCustomerRepositoryTest.createDefaultLocalConnection("MyDatabaseName"));
+        MongoDatabaseConnectionDetails connectionDetails = new MongoDatabaseConnectionDetails(
+                localConnectionUriHelperFactory.createDefaultLocalConnection("MyDatabaseName"));
+
         customer.setMongoDatabaseConnectionDetails(connectionDetails);
 
         customerRepository.save(customer);
